@@ -1,0 +1,44 @@
+{
+  "name": "zetta-code/zend-authentication",
+  "type": "library",
+  "description": "Zetta\\ZendAuthentication",
+  "license": "MIT",
+  "keywords": [
+    "authentication",
+    "zf3"
+  ],
+  "homepage": "https://github.com/zetta-code/zend-authentication",
+  "authors": [
+    {
+      "name": "Thiago S. Santos",
+      "email": "thiagos.xsantos@gmail.com",
+      "homepage": "http://thiagossantos.com.br",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Zetta\\ZendAuthentication\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "zendframework/zend-stdlib": "^3.0",
+    "zendframework/zend-session": "^2.7",
+    "zendframework/zend-permissions-acl": "^2.6",
+    "zendframework/zend-mvc-plugin-flashmessenger": "^1.0",
+    "zetta-code/zend-bootstrap": "dev-master",
+    "zetta-code/doctrine-util": "dev-master"
+  },
+  "require-dev": {
+    "zendframework/zend-mvc-i18n": "^1.0"
+  },
+  "extra": {
+    "zf": {
+      "module": "Zetta\\ZendAuthentication",
+      "config-provider": "Zetta\\ZendAuthentication\\ConfigProvider"
+    }
+  }
+}

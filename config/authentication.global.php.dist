@@ -1,0 +1,123 @@
+<?php
+
+return [
+    'zend_authentication' => [
+        'layout' => 'zetta/zend-authentication/layout/default',
+        'templates' => [
+            'password-recover' => 'zetta/zend-authentication/password-recover',
+            'recover' => 'zetta/zend-authentication/recover',
+            'signin' => 'zetta/zend-authentication/signin',
+            'signup' => 'zetta/zend-authentication/signup',
+        ],
+        'routes' => [
+            'home' => [
+                'name' => 'home',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'redirect' => [
+                'name' => 'home',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'authenticate' => [
+                'name' => 'authentication/authenticate',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'confirm-email' => [
+                'name' => 'authentication/confirm-email',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'password-recover' => [
+                'name' => 'authentication/password-recover',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'recover' => [
+                'name' => 'authentication/recover',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'signin' => [
+                'name' => 'authentication/signin',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'signout' => [
+                'name' => 'authentication/signout',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'signup' => [
+                'name' => 'authentication/signup',
+                'params' => [],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'account' => [
+                'name' => 'authentication/default',
+                'params' => ['controller' => 'account'],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+            'password-change' => [
+                'name' => 'authentication/default',
+                'params' => ['controller' => 'account', 'action' => 'password-change'],
+                'options' => [],
+                'reuseMatchedParams' => false
+            ],
+        ],
+        'options' => [
+            'identityClass' => Zetta\ZendAuthentication\Entity\AbstractUser::class,
+            'credentialClass' => Zetta\ZendAuthentication\Entity\AbstractCredential::class,
+            'roleClass' => Zetta\ZendAuthentication\Entity\AbstractRole::class,
+            'identityProperty' => 'username',
+            'emailProperty' => 'email',
+            'credentialProperty' => 'value',
+            'credentialIdentityProperty' => 'user',
+            'credentialType' => Zetta\ZendAuthentication\Entity\AbstractCredential::TYPE_PASSWORD,
+            'credentialCallable' => 'Zetta\ZendAuthentication\Entity\AbstractUser::checkPassword',
+            'signAllowed' => false,
+            'roleDefault' => 2,
+        ],
+        'acl' => [
+            'defaultRole' => 'Guest',
+            'roles' => [
+                'Guest' => null,
+                'Member' => ['Guest'],
+                'Admin' => ['Member'],
+            ],
+            'resources' => [
+                'allow' => [
+                    'Zetta\ZendAuthentication\Controller\Account' => [
+                        '' => ['Member']
+                    ],
+                    'Zetta\ZendAuthentication\Controller\Auth' => [
+                        'authenticate' => ['Guest'],
+                        'confirm-email' => ['Guest'],
+                        'password-recover' => ['Guest'],
+                        'recover' => ['Guest'],
+                        'signin' => ['Guest'],
+                        'signout' => ['Guest'],
+                        'signup' => ['Guest']
+                    ]
+                ],
+                'deny' => [
+                    'Zetta\ZendAuthentication\Controller\Auth' => [
+                        'signup' => ['Member']
+                    ],
+                ]
+            ]
+        ]
+    ]
+];
