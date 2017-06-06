@@ -6,10 +6,8 @@
 
 namespace Zetta\ZendAuthentication\Form;
 
-use Application\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Zend\Form\Form;
-use Zend\Hydrator\ClassMethods;
 use Zetta\ZendAuthentication\InputFilter\UserFilter;
 use Zetta\ZendAuthentication\Form\Fieldset\UserFieldset;
 

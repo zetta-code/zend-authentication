@@ -2706,12 +2706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zetta-code/doctrine-util.git",
-                "reference": "d83299c3b4b166d8f0672855d03e0e30a7666046"
+                "reference": "fb8171747699e61c0df77cf862a2e9f0b3c8301a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zetta-code/doctrine-util/zipball/d83299c3b4b166d8f0672855d03e0e30a7666046",
-                "reference": "d83299c3b4b166d8f0672855d03e0e30a7666046",
+                "url": "https://api.github.com/repos/zetta-code/doctrine-util/zipball/fb8171747699e61c0df77cf862a2e9f0b3c8301a",
+                "reference": "fb8171747699e61c0df77cf862a2e9f0b3c8301a",
                 "shasum": ""
             },
             "require": {
@@ -2745,14 +2745,14 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Zetta/DoctrineUtil",
+            "description": "Zetta\\DoctrineUtil",
             "homepage": "https://github.com/zetta-code/doctrine-util",
             "keywords": [
                 "doctrine",
                 "util",
                 "zf3"
             ],
-            "time": "2017-05-21 11:57:56"
+            "time": "2017-06-06 20:33:41"
         },
         {
             "name": "zetta-code/zend-bootstrap",
@@ -2760,12 +2760,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zetta-code/zend-bootstrap.git",
-                "reference": "993f7c6fbe9932b440698fe0561faec0e4c32db2"
+                "reference": "e53c25802672fa053f96910f2643913baec305ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zetta-code/zend-bootstrap/zipball/993f7c6fbe9932b440698fe0561faec0e4c32db2",
-                "reference": "993f7c6fbe9932b440698fe0561faec0e4c32db2",
+                "url": "https://api.github.com/repos/zetta-code/zend-bootstrap/zipball/e53c25802672fa053f96910f2643913baec305ec",
+                "reference": "e53c25802672fa053f96910f2643913baec305ec",
                 "shasum": ""
             },
             "require": {
@@ -2805,13 +2805,13 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Zetta/ZendBoostrap",
+            "description": "Zetta\\ZendBoostrap",
             "homepage": "https://github.com/zetta-code/zend-bootstrap",
             "keywords": [
                 "bootstrap",
                 "zf3"
             ],
-            "time": "2017-05-22 20:25:30"
+            "time": "2017-06-06 20:07:11"
         }
     ],
     "packages-dev": [

@@ -9,9 +9,9 @@ namespace Zetta\ZendAuthentication\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
 use Zetta\ZendAuthentication\Entity\UserInterface;
-use Zetta\ZendAuthentication\InputFilter\ProfileFilter;
 use Zetta\ZendAuthentication\InputFilter\UserFilter;
 use Zetta\ZendAuthentication\Form\PasswordChangeForm;
 use Zetta\ZendAuthentication\Form\UserForm;
@@ -75,7 +75,7 @@ class AccountController extends AbstractActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $post = array_merge_recursive(
+            $post = ArrayUtils::merge(
                 $request->getPost()->toArray(), $request->getFiles()->toArray()
             );
             $form->setData($post);

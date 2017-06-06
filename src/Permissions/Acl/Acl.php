@@ -19,11 +19,9 @@ class Acl extends ZendAcl
     protected $defaultRole = 'Guest';
 
     /**
-     * Constructor
-     *
+     * Acl constructor.
      * @param array $config
      * @throws \Exception
-     * @return Acl
      */
     public function __construct($config)
     {

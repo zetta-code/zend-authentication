@@ -6,13 +6,9 @@
 
 namespace Zetta\ZendAuthentication\Form\Fieldset;
 
-use Application\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Zend\Form\Fieldset;
 use Zend\Hydrator\ClassMethods;
-use Zetta\ZendAuthentication\Entity\AbstractUser;
-use Zetta\ZendBootstrap\Hydrator\Strategy\DateStrategy;
 
 class UserFieldset extends Fieldset
 {

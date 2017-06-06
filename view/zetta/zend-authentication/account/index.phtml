@@ -17,11 +17,9 @@
                     </div>
                 </div>
                 <div class="panel-footer white-bg">
-                    <h4>
-                        <ul class="list-unstyled">
-                            <li><i class="fa fa-envelope"></i> <?php echo $user->getEmail(); ?></li>
-                        </ul>
-                    </h4>
+                    <ul class="list-unstyled">
+                        <li><h4><i class="fa fa-envelope"></i> <?php echo $user->getEmail(); ?></h4></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -43,7 +41,7 @@
 
                     <div class="form-group">
                         <label class="control-label" for="username"><?php echo $this->translate('Username'); ?></label>
-                        <input type="text" name="username" class="form-control" placeholder="<?php echo $this->translate('Username'); ?>" disabled value="<?php echo $userFieldset->get('username')->getValue(); ?>">
+                        <input name="username" class="form-control" placeholder="<?php echo $this->translate('Username'); ?>" disabled value="<?php echo $userFieldset->get('username')->getValue(); ?>">
                     </div>
                     <?php echo $this->formHidden($userFieldset->get('username')); ?>
                     <div class="form-group">
@@ -87,7 +85,7 @@ $('#avatar-upload').change(function () {
         var file = this.files[0];
         var reader = new FileReader();
         reader.onload = function (e) {
-            selectedImage = e.target.result;
+            var selectedImage = e.target.result;
             $('#avatar-preview').attr('src', selectedImage);
             $('#avatar-label').text(
                 file.name.length > 12 ? file.name.substring(0, 12)+"..." : file.name
