@@ -39,7 +39,7 @@ interface RoleInterface
 
     /**
      * Get the Role defaultName
-     * @return bool
+     * @return string
      */
     public function getDefaultName();
 }

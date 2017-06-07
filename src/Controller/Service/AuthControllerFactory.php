@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2017 Zetta Code
  */
 
-namespace Zetta\ZendAuthentication\Controller;
+namespace Zetta\ZendAuthentication\Controller\Service;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
@@ -22,6 +22,6 @@ class AuthControllerFactory implements FactoryInterface
         $configuration = $container->get('Configuration');
         $config = $configuration['zend_authentication'];
 
-        return new AuthController($entityManager, $authenticationService, $translator,$config);
+        return new $requestedName($entityManager, $authenticationService, $translator, $config);
     }
 }

@@ -120,7 +120,8 @@ interface UserInterface
 
     /**
      * Get the User role name
+     * @param mixed $role
      * @return string
      */
-    public function role();
+    public function role($role = null);
 }

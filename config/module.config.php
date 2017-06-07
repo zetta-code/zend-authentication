@@ -17,8 +17,8 @@ return [
             'Zetta\ZendAuthentication\Controller\Auth' => Controller\AuthController::class
         ],
         'factories' => [
-            Controller\AccountController::class => Controller\AccountControllerFactory::class,
-            Controller\AuthController::class => Controller\AuthControllerFactory::class
+            Controller\AccountController::class => Controller\Service\AccountControllerFactory::class,
+            Controller\AuthController::class => Controller\Service\AuthControllerFactory::class
         ]
     ],
 

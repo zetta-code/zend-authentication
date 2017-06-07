@@ -85,7 +85,6 @@ class AuthController extends AbstractActionController
      */
     public function setOptions($options)
     {
-
         $this->routes = $options['routes'];
         $this->templates = $options['templates'];
         $this->options = $options['options'];
@@ -167,7 +166,7 @@ class AuthController extends AbstractActionController
                 }
             }
         }
-        
+
         return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $options, $this->routes['signin']['reuseMatchedParams']);
     }
 
@@ -210,7 +209,7 @@ class AuthController extends AbstractActionController
 
                 /** @var RoleInterface $role */
                 $role = $this->entityManager->find($this->options['roleClass'], $this->options['roleDefault']);
-                $user->setRole($role);
+                $user->role($role);
 
                 $user->setAvatar($this->thumbnail()->getDefaultThumbnail());
                 $user->setSignAllowed($this->options['signAllowed']);
@@ -219,7 +218,6 @@ class AuthController extends AbstractActionController
                 $this->entityManager->persist($user);
                 $this->entityManager->persist($credential);
                 $this->entityManager->flush();
-
 
                 $fullLink = $this->url()->fromRoute(
                     $this->routes['confirm-email']['name'],
