@@ -91,11 +91,11 @@ class AccountController extends AbstractActionController
         }
 
         $form->prepare();
-        $viewModel = new ViewModel(array(
+        $viewModel = new ViewModel([
             'form' => $form,
             'user' => $user,
             'routes' => $this->routes
-        ));
+        ]);
 
         return $viewModel;
     }
@@ -117,7 +117,7 @@ class AccountController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $credential = $credentialRepo->findOneBy(array($this->options['credentialIdentityProperty'] => $user, 'type' => $this->options['credentialType']));
+                $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $user, 'type' => $this->options['credentialType']]);
                 $passwordOld = sha1(sha1($data['password-old']));
                 $passwordNew = sha1(sha1($data['password-new']));
                 $password = $credential->getValue();
@@ -136,11 +136,11 @@ class AccountController extends AbstractActionController
         }
 
         $form->prepare();
-        $viewModel = new ViewModel(array(
+        $viewModel = new ViewModel([
             'form' => $form,
             'user' => $user,
             'routes' => $this->routes
-        ));
+        ]);
 
         return $viewModel;
     }

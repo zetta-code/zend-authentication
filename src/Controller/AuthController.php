@@ -381,7 +381,7 @@ class AuthController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $credential = $credentialRepo->findOneBy(array($this->options['credentialIdentityProperty'] => $identity, 'type' => $this->options['credentialType']));
+                $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $identity, 'type' => $this->options['credentialType']]);
                 $passwordNew = sha1(sha1($data['password-new']));
 
                 $identity->setToken(sha1(uniqid(mt_rand(), true)));

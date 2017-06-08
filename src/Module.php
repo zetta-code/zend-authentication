@@ -18,6 +18,7 @@ use Zend\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayObject;
 use Zend\Stdlib\ArrayUtils;
+use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zetta\ZendAuthentication\Exception\UnauthorizedException;
 use Zetta\ZendAuthentication\View\UnauthorizedStrategy;
@@ -135,22 +136,22 @@ class Module
                 /** @var FlashMessenger $flashMessenger */
                 $flashMessenger = $this->getPluginManager()->get(FlashMessenger::class);
                 $flashMessenger->addErrorMessage(_('Please, sign in.'));
+                /** @var Url $urlHelper */
+                $urlHelper = $this->getHelperManager()->get(Url::class);
 
-                $router = $e->getRouter();
-                $redirect = $e->getRequest()->getRequestUri();
-                $params = ArrayUtils::merge($matches->getParams(), $config['zend_authentication']['routes']['signin']['params']);
-                $options = [
-                    'name' => $config['zend_authentication']['routes']['signin']['name']
-                ];
-                if ($redirect !== '' && $redirect !== '/') {
+                $uri = $e->getRequest()->getRequestUri();
+                $redirectUri = $urlHelper($config['zend_authentication']['routes']['redirect']['name'], $config['zend_authentication']['routes']['redirect']['params'], $config['zend_authentication']['routes']['redirect']['options'], $config['zend_authentication']['routes']['redirect']['reuseMatchedParams']);
+                $options = [];
+                if ($uri !== '' && $uri !== $redirectUri) {
                     $options['query'] = ['redirect' => $e->getRequest()->getRequestUri()];
                 }
-                $options = ArrayUtils::merge($options, $config['zend_authentication']['routes']['signin']['options']);
-                $url = $router->assemble($params, $options);
+                $options = ArrayUtils::merge($config['zend_authentication']['routes']['signin']['options'], $options);
+                $url = $urlHelper($config['zend_authentication']['routes']['signin']['name'], $config['zend_authentication']['routes']['signin']['params'], $options, $config['zend_authentication']['routes']['signin']['reuseMatchedParams']);
                 /** @var \Zend\Http\PhpEnvironment\Response $response */
                 $response = $e->getResponse();
                 $response->getHeaders()->addHeaderLine('Location', $url);
                 $response->setStatusCode(302);
+                $response->setHeaders();
 
                 $e->stopPropagation();
 

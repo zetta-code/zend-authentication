@@ -26,7 +26,7 @@ class CredentialRepository extends ObjectRepository
      *
      * @param array|AuthenticationOptions $options
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         parent::__construct($options);
     }
