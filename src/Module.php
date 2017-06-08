@@ -18,6 +18,7 @@ use Zend\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayObject;
 use Zend\Stdlib\ArrayUtils;
+use Zend\Stdlib\ResponseInterface;
 use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zetta\ZendAuthentication\Exception\UnauthorizedException;
@@ -74,14 +75,14 @@ class Module
 
     /**
      * @param MvcEvent $e
-     * @return void
+     * @return ResponseInterface
      * @throws \Exception
      */
     public function checkAuthentication(MvcEvent $e)
     {
         $matches = $e->getRouteMatch();
         if (!$matches instanceof RouteMatch) {
-            return;
+            return null;
         }
 
         //framework error
@@ -103,7 +104,7 @@ class Module
                     break;
             }
             $e->stopPropagation();
-            return;
+            return null;
         }
 
         $controller = $matches->getParam('controller');
@@ -127,7 +128,7 @@ class Module
                 }
             }
             $e->setResult($return);
-            return;
+            return null;
         }
 
         if (!$auth->hasIdentity()) {
@@ -151,11 +152,10 @@ class Module
                 $response = $e->getResponse();
                 $response->getHeaders()->addHeaderLine('Location', $url);
                 $response->setStatusCode(302);
-                $response->setHeaders();
 
                 $e->stopPropagation();
 
-                return;
+                return $response;
             }
         } else {
             // Authorization
@@ -186,6 +186,8 @@ class Module
                 $navigation->setAcl($acl)->setRole($role);
             }
         }
+
+        return null;
     }
 
     /**
