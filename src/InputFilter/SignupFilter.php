@@ -16,12 +16,10 @@ class SignupFilter extends InputFilter
     /**
      * SignupFilter constructor.
      * @param EntityManagerInterface $em
-     * @param null $options
+     * @param array $options
      */
-    public function __construct(EntityManagerInterface $em, $options = null)
+    public function __construct(EntityManagerInterface $em, $options = [])
     {
-        $config = $options['config'];
-
         $this->add([
             'name' => 'id',
             'required' => true,
@@ -51,8 +49,8 @@ class SignupFilter extends InputFilter
                     'options' => [
                         'use_context' => true,
                         'object_manager' => $em,
-                        'object_repository' => $em->getRepository($config['identityClass']),
-                        'fields' => $config['identityProperty'],
+                        'object_repository' => $em->getRepository($options['identityClass']),
+                        'fields' => $options['identityProperty'],
                         'messages' => [
                             UniqueObject::ERROR_OBJECT_NOT_UNIQUE => sprintf(_('The username %s already exists'), '\'%value%\'')
                         ]
@@ -81,8 +79,8 @@ class SignupFilter extends InputFilter
                     'options' => [
                         'use_context' => true,
                         'object_manager' => $em,
-                        'object_repository' => $em->getRepository($config['identityClass']),
-                        'fields' => $config['identityEmail'],
+                        'object_repository' => $em->getRepository($options['identityClass']),
+                        'fields' => $options['identityEmail'],
                         'messages' => [
                             UniqueObject::ERROR_OBJECT_NOT_UNIQUE => sprintf(_('The email %s already exists'), '\'%value%\'')
                         ]

@@ -8,8 +8,8 @@ namespace Zetta\ZendAuthentication\InputFilter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineModule\Validator\UniqueObject;
-use Zend\InputFilter\InputFilter;
 use Zend\Filter;
+use Zend\InputFilter\InputFilter;
 use Zend\Validator;
 
 class UserFilter extends InputFilter
@@ -184,7 +184,7 @@ class UserFilter extends InputFilter
                 [
                     'name' => Filter\File\RenameUpload::class,
                     'options' => [
-                        'target'    => './public/uploads/.png',
+                        'target' => './public/uploads/.png',
                         'randomize' => true,
                         'use_upload_extension ' => true
                     ]

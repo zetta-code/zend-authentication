@@ -14,7 +14,13 @@ use Zetta\ZendAuthentication\InputFilter\SignupFilter;
 class SignupForm extends Form
 {
 
-    public function __construct(EntityManagerInterface $em, $name = 'signup', $options = null)
+    /**
+     * SignupForm constructor.
+     * @param EntityManagerInterface $em
+     * @param string $name
+     * @param array $options
+     */
+    public function __construct(EntityManagerInterface $em, $name = 'signup', $options = [])
     {
         parent::__construct($name, $options);
         $this->setAttribute('method', 'post');

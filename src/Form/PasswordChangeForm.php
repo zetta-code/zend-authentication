@@ -11,6 +11,12 @@ use Zetta\ZendAuthentication\InputFilter\PasswordChangeFilter;
 
 class PasswordChangeForm extends Form
 {
+
+    /**
+     * PasswordChangeForm constructor.
+     * @param string $name
+     * @param array $options
+     */
     public function __construct($name = 'password-change', $options = [])
     {
         parent::__construct($name, $options);

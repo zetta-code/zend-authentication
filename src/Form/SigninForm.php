@@ -12,7 +12,12 @@ use Zetta\ZendAuthentication\InputFilter\SigninFilter;
 class SigninForm extends Form
 {
 
-    public function __construct($name = 'signin', $options = null)
+    /**
+     * SigninForm constructor.
+     * @param string $name
+     * @param array $options
+     */
+    public function __construct($name = 'signin', $options = [])
     {
         parent::__construct($name, $options);
         $this->setAttribute('method', 'post');

@@ -12,9 +12,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
 use Zetta\ZendAuthentication\Entity\UserInterface;
-use Zetta\ZendAuthentication\InputFilter\UserFilter;
 use Zetta\ZendAuthentication\Form\PasswordChangeForm;
 use Zetta\ZendAuthentication\Form\UserForm;
+use Zetta\ZendAuthentication\InputFilter\UserFilter;
 
 class AccountController extends AbstractActionController
 {

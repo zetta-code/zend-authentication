@@ -8,8 +8,8 @@ namespace Zetta\ZendAuthentication\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Zend\Form\Form;
-use Zetta\ZendAuthentication\InputFilter\UserFilter;
 use Zetta\ZendAuthentication\Form\Fieldset\UserFieldset;
+use Zetta\ZendAuthentication\InputFilter\UserFilter;
 
 class UserForm extends Form
 {

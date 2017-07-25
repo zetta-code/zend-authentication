@@ -12,6 +12,12 @@ use Zetta\ZendAuthentication\InputFilter\RecoverFilter;
 
 class RecoverForm extends Form
 {
+
+    /**
+     * RecoverForm constructor.
+     * @param string $name
+     * @param array $options
+     */
     public function __construct($name = 'signup', $options = [])
     {
         parent::__construct($name, $options);

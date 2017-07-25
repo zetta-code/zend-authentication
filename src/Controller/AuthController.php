@@ -188,7 +188,7 @@ class AuthController extends AbstractActionController
             return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         }
 
-        $form = new SignupForm($this->entityManager, 'signup', [$this->options]);
+        $form = new SignupForm($this->entityManager, 'signup', $this->options);
         $form->setAttribute('action', $this->url()->fromRoute($this->routes['signup']['name'], $this->routes['signup']['params'], $this->routes['signup']['options'], $this->routes['signup']['reuseMatchedParams']));
         $identityClass = $this->options['identityClass'];
         /** @var UserInterface $user */
