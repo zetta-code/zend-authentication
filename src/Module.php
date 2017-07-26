@@ -113,6 +113,9 @@ class Module
         $config = $this->getServiceManager()->get('config');
         $auth = $this->getServiceManager()->get(AuthenticationService::class);
         $acl = $this->getServiceManager()->get(Permissions\Acl\Acl::class);
+        $navigation = $this->getHelperManager()->get('navigation');
+        $role = $acl->getDefaultRole();
+        $navigation->setAcl($acl)->setRole($role);
 
         if (!$acl->hasResource($controller)) {
             $e->setName(MvcEvent::EVENT_DISPATCH_ERROR);
@@ -133,7 +136,7 @@ class Module
 
         if (!$auth->hasIdentity()) {
             // Authentication
-            if (!$acl->isAllowed($acl->getDefaultRole(), $controller, $action)) {
+            if (!$acl->isAllowed($role, $controller, $action)) {
                 /** @var FlashMessenger $flashMessenger */
                 $flashMessenger = $this->getPluginManager()->get(FlashMessenger::class);
                 $flashMessenger->addErrorMessage(_('Please, sign in.'));
@@ -182,8 +185,7 @@ class Module
                 }
                 $e->setResult($return);
             } else {
-                $navigation = $this->getHelperManager()->get('navigation');
-                $navigation->setAcl($acl)->setRole($role);
+                $navigation->setRole($role);
             }
         }
 
