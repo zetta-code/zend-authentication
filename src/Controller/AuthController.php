@@ -305,7 +305,7 @@ class AuthController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $identity = $identityRepo->findOneBy([$this->options['identityEmail'] => $form->get('email')->getValue()]);
+                $identity = $identityRepo->findOneBy([$this->options['emailProperty'] => $form->get('email')->getValue()]);
                 if (is_null($identity)) {
                     $this->flashMessenger()->addErrorMessage('Email not found');
                 } else {
