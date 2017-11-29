@@ -8,11 +8,11 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <img class="img-responsive" width="192" height="192" src="<?php echo $user->getAvatar(); ?>" alt="@<?php echo $user->getUsername(); ?>">
+                        <img class="img-responsive" width="192" height="192" src="<?php echo $this->basePath($user->getAvatar()); ?>" alt="@<?php echo $user->getUsername(); ?>">
                     </div>
                     <div class="col-lg-8 col-md-8 col-sm-12">
                         <h3>
-                            <?php echo $user->getName(); ?> <span class="label label-success"><?php echo $user->role(); ?></span>
+                            <?php echo $user->getName() ?: $user->getUsername(); ?> <span class="label label-success"><?php echo $user->role(); ?></span>
                         </h3>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                         <label class="control-label"><?php echo $this->translate('Avatar'); ?></label>
                         <div class="row">
                             <div class="col-xs-5">
-                                <img class="media-object" id='avatar-preview' width="192" height="192" src="<?php echo $user->getAvatar(); ?>"/>
+                                <img class="media-object" id='avatar-preview' width="192" height="192" src="<?php echo $this->basePath($user->getAvatar()); ?>"/>
                             </div>
                             <div class="col-xs-7">
                                 <input id="avatar-upload" type="file" name="<?php echo $userFieldset->get('avatar')->getName(); ?>" style="display: none">

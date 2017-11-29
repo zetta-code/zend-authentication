@@ -109,20 +109,6 @@ class SignupFilter extends InputFilter
         ]);
 
         $this->add([
-            'name' => 'password-confirm',
-            'filters' => [
-                ['name' => 'StringTrim'],
-                ['name' => 'StringTrim']
-            ],
-            'validators' => [
-                [
-                    'name' => 'identical',
-                    'options' => ['token' => 'password']
-                ],
-            ],
-        ]);
-
-        $this->add([
             'name' => 'accepted-terms',
             'validators' => [
                 [

@@ -211,7 +211,7 @@ class AuthController extends AbstractActionController
                 $role = $this->entityManager->find($this->options['roleClass'], $this->options['roleDefault']);
                 $user->role($role);
 
-                $user->setAvatar($this->thumbnail()->getDefaultThumbnail());
+                $user->setAvatar($this->thumbnail()->getDefaultThumbnailPath());
                 $user->setSignAllowed($this->options['signAllowed']);
                 $user->setToken(sha1(uniqid(mt_rand(), true)));
 

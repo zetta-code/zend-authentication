@@ -43,22 +43,5 @@ class PasswordChangeFilter extends InputFilter
                 ],
             ],
         ]);
-
-        $this->add([
-            'name' => 'password-new-confirm',
-            'required' => true,
-            'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-            'validators' => [
-                [
-                    'name' => 'Identical',
-                    'options' => [
-                        'token' => 'password-new',
-                    ],
-                ],
-            ],
-        ]);
     }
 }

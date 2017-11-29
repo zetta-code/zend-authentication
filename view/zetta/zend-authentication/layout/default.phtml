@@ -63,7 +63,8 @@
 
     <!-- Start Inline Scripts-->
     <?php echo $this->inlineScript()
-        ->prependFile($this->basePath('assets/bootstrap/js/bootstrap.min.js')); ?>
+        ->prependFile($this->basePath('assets/bootstrap/js/bootstrap.min.js'))
+        ->prependFile($this->basePath('js/default.js')); ?>
     <!-- End Inline Scripts-->
 </body>
 </html>

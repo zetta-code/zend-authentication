@@ -65,6 +65,7 @@ class SignupForm extends Form
             'name' => 'password',
             'type' => 'password',
             'attributes' => [
+                'id' => $name . '-password',
                 'class' => 'form-control',
                 'placeholder' => _('Password'),
             ],

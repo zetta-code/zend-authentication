@@ -29,6 +29,7 @@ class PasswordChangeForm extends Form
             'name' => 'password-old',
             'type' => 'password',
             'attributes' => [
+                'id' => $name . '-password-old',
                 'class' => 'form-control',
                 'placeholder' => _('Current Password'),
             ],
@@ -43,25 +44,12 @@ class PasswordChangeForm extends Form
             'name' => 'password-new',
             'type' => 'password',
             'attributes' => [
+                'id' => $name . '-password-new',
                 'class' => 'form-control',
                 'placeholder' => _('New Password'),
             ],
             'options' => [
                 'label' => _('New Password'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
-            ],
-        ]);
-
-        $this->add([
-            'name' => 'password-new-confirm',
-            'type' => 'password',
-            'attributes' => [
-                'class' => 'form-control',
-                'placeholder' => _('Confirm Password'),
-            ],
-            'options' => [
-                'label' => _('Confirm Password'),
                 'label_attributes' => ['class' => 'control-label'],
                 'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
             ],
