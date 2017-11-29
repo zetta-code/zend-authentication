@@ -80,7 +80,7 @@ class SignupFilter extends InputFilter
                         'use_context' => true,
                         'object_manager' => $em,
                         'object_repository' => $em->getRepository($options['identityClass']),
-                        'fields' => $options['identityEmail'],
+                        'fields' => $options['emailProperty'],
                         'messages' => [
                             UniqueObject::ERROR_OBJECT_NOT_UNIQUE => sprintf(_('The email %s already exists'), '\'%value%\'')
                         ]
