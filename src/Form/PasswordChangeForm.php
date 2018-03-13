@@ -26,30 +26,15 @@ class PasswordChangeForm extends Form
         $this->setInputFilter(new PasswordChangeFilter($options));
 
         $this->add([
-            'name' => 'password-old',
+            'name' => 'password',
             'type' => 'password',
             'attributes' => [
-                'id' => $name . '-password-old',
+                'id' => $name . '-password',
                 'class' => 'form-control',
-                'placeholder' => _('Current Password'),
+                'placeholder' => _('Password'),
             ],
             'options' => [
-                'label' => _('Current Password'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
-            ],
-        ]);
-
-        $this->add([
-            'name' => 'password-new',
-            'type' => 'password',
-            'attributes' => [
-                'id' => $name . '-password-new',
-                'class' => 'form-control',
-                'placeholder' => _('New Password'),
-            ],
-            'options' => [
-                'label' => _('New Password'),
+                'label' => 'Password',
                 'label_attributes' => ['class' => 'control-label'],
                 'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
             ],
@@ -59,7 +44,7 @@ class PasswordChangeForm extends Form
             'name' => 'submit-btn',
             'type' => 'Submit',
             'attributes' => [
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-lg btn-block btn-primary',
                 'value' => _('Change Password'),
                 'id' => $name . '-submit',
             ],

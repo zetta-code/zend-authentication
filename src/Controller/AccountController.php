@@ -62,6 +62,9 @@ class AccountController extends AbstractActionController
         $this->options = $options['options'];
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function indexAction()
     {
         /** @var UserInterface $user */
@@ -100,6 +103,9 @@ class AccountController extends AbstractActionController
         return $viewModel;
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function passwordChangeAction()
     {
         $credentialRepo = $this->entityManager->getRepository($this->options['credentialClass']);

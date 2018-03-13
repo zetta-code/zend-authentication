@@ -6,7 +6,9 @@
 
 namespace Zetta\ZendAuthentication\InputFilter;
 
+use Zend\Filter;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\StringLength;
 
 class SigninFilter extends InputFilter
 {
@@ -16,11 +18,12 @@ class SigninFilter extends InputFilter
             'name' => 'username',
             'required' => true,
             'filters' => [
-                ['name' => 'StringTrim'],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
             ],
             'validators' => [
                 [
-                    'name' => 'StringLength',
+                    'name' => StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
                         'min' => 5,
@@ -34,11 +37,12 @@ class SigninFilter extends InputFilter
             'name' => 'password',
             'required' => true,
             'filters' => [
-                ['name' => 'StringTrim']
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
             ],
             'validators' => [
                 [
-                    'name' => 'StringLength',
+                    'name' => StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
                     ],

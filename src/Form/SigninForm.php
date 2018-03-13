@@ -55,10 +55,13 @@ class SigninForm extends Form
         $this->add([
             'name' => 'remember-me',
             'type' => 'checkbox',
+            'attributes' => [
+                'class' => 'custom-control-input'
+            ],
             'options' => [
                 'label' => _('Remember-me'),
-                'label_options' => ['always_wrap' => true],
-                'div' => ['class' => 'checkbox', 'class_error' => 'has-error'],
+                'label_attributes' => ['class' => 'custom-control custom-checkbox'],
+                'label_options' => ['always_wrap' => true, 'span_class' => 'custom-control-label'],
             ],
         ]);
 

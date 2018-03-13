@@ -3,52 +3,46 @@ $title = $this->translate('Sign in');
 $this->headTitle($title);
 ?>
 
-<div class="signin-img text-center">
-    <a class="signin-logo" href="<?php echo $this->url($routes['home']['name'], $routes['home']['params'], $routes['home']['options'], $routes['home']['reuseMatchedParams']); ?>">
-        <img src="<?php echo $this->basePath('img/brand.svg') ?>" height="128" alt="<?php echo $this->translate('Home'); ?>">
-    </a>
-</div>
+<div class="splash-container">
+    <div class="card card-border-color card-border-color-primary">
+        <div class="card-header">
+            <a href="<?php echo $this->url($routes['home']['name'], $routes['home']['params'], $routes['home']['options'], $routes['home']['reuseMatchedParams']); ?>">
+                <img src="<?php echo $this->basePath('img/brand.svg') ?>" height="48" class="logo-img" alt="logo">
+            </a>
+            <span class="splash-description"><?php echo $this->translate('Please enter your user information.'); ?></span>
+        </div>
+        <div class="card-body">
+            <?php echo $this->zettaFlashMessenger(); ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title text-center"><?php echo $title ?></h3>
-    </div>
-    <div class="panel-body">
-        <?php echo $this->zettaFlashMessenger(); ?>
-        <?php echo $this->form()->openTag($form); ?>
-        <fieldset>
-            <?php echo $this->zettaFormRow($form->get('username')); ?>
-            <?php echo $this->zettaFormRow($form->get('password')); ?>
+            <?php echo $this->form()->openTag($form); ?>
+                <span class="splash-title pb-4"><?php echo $title ?></span>
 
-            <div class="row">
-                <div class="col-xs-6">
-                    <?php echo $this->zettaFormRow($form->get('remember-me'), 'append'); ?>
-                </div>
-                <div class="col-xs-6">
-                    <div class="form-group">
+                <?php echo $this->zettaFormRow($form->get('username')); ?>
+
+                <?php echo $this->zettaFormRow($form->get('password')); ?>
+
+                <div class="form-group row login-tools">
+                    <div class="col-6 login-remember">
+                        <?php echo $this->zettaFormRow($form->get('remember-me'), 'append'); ?>
+                    </div>
+                    <div class="col-6 login-forgot-password">
                         <a href="<?php echo $this->url($routes['recover']['name'], $routes['recover']['params'], $routes['recover']['options'], $routes['recover']['reuseMatchedParams']); ?>">
                             <?php echo $this->translate('Forgotten password'); ?>
                         </a>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-6">
-                    <!-- Change this to a button or input when using this as a form -->
+                <div class="form-group">
                     <?php echo $this->formRow($form->get('submit-btn')); ?>
                 </div>
-                <div class="col-xs-6">
-                    <div><?php echo $this->translate('Don\'t have an account?'); ?></div>
-
-                    <strong>
-                        <a href="<?php echo $this->url($routes['signup']['name'], $routes['signup']['params'], $routes['signup']['options'], $routes['signup']['reuseMatchedParams']); ?>">
-                            <?php echo $this->translate('Sign up'); ?>
-                        </a>
-                    </strong>
-                </div>
-            </div>
-        </fieldset>
-        <?php echo $this->form()->closeTag(); ?>
+            <?php echo $this->form()->closeTag(); ?>
+        </div>
+    </div>
+    <div class="splash-footer">
+        <span>
+            <?php echo $this->translate('Don\'t have an account?'); ?>
+            <a href="<?php echo $this->url($routes['signup']['name'], $routes['signup']['params'], $routes['signup']['options'], $routes['signup']['reuseMatchedParams']); ?>">
+                <?php echo $this->translate('Sign up'); ?>
+            </a>
+        </span>
     </div>
 </div>

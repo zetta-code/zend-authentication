@@ -92,6 +92,9 @@ class AuthController extends AbstractActionController
         $this->layoutView = $options['layout'];
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function signinAction()
     {
         if ($this->identity()) {
@@ -119,6 +122,9 @@ class AuthController extends AbstractActionController
         return $viewModel;
     }
 
+    /**
+     * @return \Zend\Http\Response
+     */
     public function authenticateAction()
     {
         if ($this->identity()) {
@@ -170,6 +176,9 @@ class AuthController extends AbstractActionController
         return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $options, $this->routes['signin']['reuseMatchedParams']);
     }
 
+    /**
+     * @return \Zend\Http\Response
+     */
     public function signoutAction()
     {
         if (!$this->identity()) {
@@ -182,6 +191,12 @@ class AuthController extends AbstractActionController
         return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
     public function signupAction()
     {
         if ($this->identity()) {
@@ -252,6 +267,12 @@ class AuthController extends AbstractActionController
         return $viewModel;
     }
 
+    /**
+     * @return \Zend\Http\Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function confirmEmailAction()
     {
         $identityRepo = $this->entityManager->getRepository($this->options['identityClass']);
@@ -290,6 +311,11 @@ class AuthController extends AbstractActionController
         }
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function recoverAction()
     {
         $identityRepo = $this->entityManager->getRepository($this->options['identityClass']);
@@ -347,6 +373,12 @@ class AuthController extends AbstractActionController
         return $viewModel;
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function passwordRecoverAction()
     {
         $identityRepo = $this->entityManager->getRepository($this->options['identityClass']);
@@ -373,7 +405,6 @@ class AuthController extends AbstractActionController
         $form = new PasswordChangeForm();
         $this->routes['password-recover']['params']['token'] = $token;
         $form->setAttribute('action', $this->url()->fromRoute($this->routes['password-recover']['name'], $this->routes['password-recover']['params'], $this->routes['password-recover']['options'], $this->routes['password-recover']['reuseMatchedParams']));
-        $form->getInputFilter()->get('password-old')->setRequired(false);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -382,7 +413,7 @@ class AuthController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $identity, 'type' => $this->options['credentialType']]);
-                $passwordNew = sha1(sha1($data['password-new']));
+                $passwordNew = sha1(sha1($data['password']));
 
                 $identity->setToken(sha1(uniqid(mt_rand(), true)));
                 $credential->setValue($passwordNew);

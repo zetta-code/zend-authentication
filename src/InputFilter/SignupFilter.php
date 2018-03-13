@@ -8,8 +8,9 @@ namespace Zetta\ZendAuthentication\InputFilter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineModule\Validator\UniqueObject;
+use Zend\Filter;
 use Zend\InputFilter\InputFilter;
-use Zend\Validator\Identical;
+use Zend\Validator;
 
 class SignupFilter extends InputFilter
 {
@@ -24,7 +25,7 @@ class SignupFilter extends InputFilter
             'name' => 'id',
             'required' => true,
             'filters' => [
-                ['name' => 'Int'],
+                ['name' => Filter\ToInt::class],
             ],
         ]);
 
@@ -32,12 +33,12 @@ class SignupFilter extends InputFilter
             'name' => 'username',
             'required' => true,
             'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
             ],
             'validators' => [
                 [
-                    'name' => 'StringLength',
+                    'name' => Validator\StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
                         'min' => 5,
@@ -45,7 +46,7 @@ class SignupFilter extends InputFilter
                     ],
                 ],
                 [
-                    'name' => 'DoctrineModule\Validator\UniqueObject',
+                    'name' => UniqueObject::class,
                     'options' => [
                         'use_context' => true,
                         'object_manager' => $em,
@@ -63,19 +64,19 @@ class SignupFilter extends InputFilter
             'name' => 'email',
             'required' => true,
             'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
 
             ],
             'validators' => [
                 [
-                    'name' => 'EmailAddress',
+                    'name' => Validator\EmailAddress::class,
                     'options' => [
                         'message' => _('Invalid email address')
                     ],
                 ],
                 [
-                    'name' => 'DoctrineModule\Validator\UniqueObject',
+                    'name' => UniqueObject::class,
                     'options' => [
                         'use_context' => true,
                         'object_manager' => $em,
@@ -93,31 +94,31 @@ class SignupFilter extends InputFilter
             'name' => 'password',
             'required' => true,
             'filters' => [
-                ['name' => 'StringTrim'],
-                ['name' => 'StringTrim']
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
             ],
             'validators' => [
                 [
-                    'name' => 'StringLength',
+                    'name' => Validator\StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
                         'min' => 6,
                         'max' => 128,
                     ],
-                ],
-            ],
+                ]
+            ]
         ]);
 
         $this->add([
             'name' => 'accepted-terms',
             'validators' => [
                 [
-                    'name' => 'Identical',
+                    'name' => Validator\Identical::class,
                     'options' => [
                         'token' => '1',
-                        'literal' => TRUE,
+                        'literal' => true,
                         'messages' => [
-                            Identical::NOT_SAME => _('You must agree to the terms of use.')
+                            Validator\Identical::NOT_SAME => _('You must agree to the terms of use.')
                         ]
                     ],
                 ],

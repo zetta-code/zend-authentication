@@ -6,7 +6,9 @@
 
 namespace Zetta\ZendAuthentication\InputFilter;
 
+use Zend\Filter;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\StringLength;
 
 class PasswordChangeFilter extends InputFilter
 {
@@ -17,24 +19,15 @@ class PasswordChangeFilter extends InputFilter
     public function __construct($options = [])
     {
         $this->add([
-            'name' => 'password-old',
+            'name' => 'password',
             'required' => true,
             'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-        ]);
-
-        $this->add([
-            'name' => 'password-new',
-            'required' => true,
-            'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
             ],
             'validators' => [
                 [
-                    'name' => 'StringLength',
+                    'name' => StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
                         'min' => 5,

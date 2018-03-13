@@ -6,6 +6,7 @@
 
 namespace Zetta\ZendAuthentication\InputFilter;
 
+use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\EmailAddress;
 
@@ -21,8 +22,8 @@ class RecoverFilter extends InputFilter
             'name' => 'email',
             'required' => true,
             'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
 
             ],
             'validators' => [

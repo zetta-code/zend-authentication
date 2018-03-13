@@ -143,12 +143,12 @@ class UserFilter extends InputFilter
             'name' => 'password',
             'required' => true,
             'filters' => [
-                ['name' => 'StringTrim'],
-                ['name' => 'StringTrim']
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
             ],
             'validators' => [
                 [
-                    'name' => 'StringLength',
+                    'name' => Validator\StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
                         'min' => 6,

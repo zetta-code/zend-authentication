@@ -76,6 +76,7 @@ class UserFieldset extends Fieldset
             'name' => 'password',
             'type' => 'password',
             'attributes' => [
+                'id' => $name . '-password',
                 'class' => 'form-control',
                 'placeholder' => _('Password'),
             ],

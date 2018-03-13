@@ -77,26 +77,16 @@ class SignupForm extends Form
         ]);
 
         $this->add([
-            'name' => 'password-confirm',
-            'type' => 'password',
-            'attributes' => [
-                'class' => 'form-control',
-                'placeholder' => _('Confirm Password'),
-            ],
-            'options' => [
-                'label' => _('Confirm Password'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
-            ],
-        ]);
-
-        $this->add([
             'name' => 'accepted-terms',
             'type' => 'checkbox',
+            'attributes' => [
+                'class' => 'custom-control-input'
+            ],
             'options' => [
                 'label' => _('I have read and accepted the terms of use.'),
-                'label_options' => ['always_wrap' => true],
-                'div' => ['class' => 'checkbox', 'class_error' => 'has-error'],
+                'label_attributes' => ['class' => 'custom-control custom-checkbox'],
+                'label_options' => ['always_wrap' => true, 'span_class' => 'custom-control-label'],
+                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
             ],
         ]);
 

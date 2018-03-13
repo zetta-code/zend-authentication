@@ -1,70 +1,72 @@
 <?php echo $this->doctype(); ?>
 
 <html lang="en-US">
-<head>
-    <meta charset="utf-8">
-    <?php echo $this->headMeta()
-        ->prependName('application-name', 'zend-authentication')
-        ->prependName('keywords', 'zend-authentication, responsive layout')
-        ->prependName('description', 'Zend Authentication')
-        ->prependName('author', 'Thiago S. Santos')
-        ->prependName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1')
-        ->prependHttpEquiv('X-UA-Compatible', 'IE=edge'); ?>
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headMeta()
+            ->prependName('keywords', 'zetta code, responsive layout')
+            ->prependName('description', 'ZF Skeleton App')
+            ->prependName('author', 'Zetta Code')
+            ->prependName('viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no')
+            ->prependHttpEquiv('X-UA-Compatible', 'IE=edge'); ?>
 
-    <?php echo $this->headTitle($this->translate('Zend Authentication'))->setSeparator(' – ')->setAutoEscape(false) ?>
+        <?php echo $this->headTitle($this->translate('ZF Skeleton App'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
-    <!-- Import google fonts - Heading first/ text second -->
-    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700'/>
-    <!--[if lt IE 9]>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css"/>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:600" rel="stylesheet" type="text/css"/>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:700" rel="stylesheet" type="text/css"/>
-    <![endif]-->
+        <!-- Import google fonts - Heading first/ text second -->
+        <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700'/>
+        <!--[if lt IE 9]>
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css"/>
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:600" rel="stylesheet" type="text/css"/>
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:700" rel="stylesheet" type="text/css"/>
+        <![endif]-->
 
-    <!-- Le styles -->
-    <?php echo $this->headLink()
-        ->prependStylesheet($this->basePath('assets/zetta/css/zend-authentication.css'))
-        ->prependStylesheet($this->basePath('assets/animate.min.css'))
-        ->prependStylesheet($this->basePath('assets/font-awesome/css/font-awesome.min.css'))
-        ->prependStylesheet($this->basePath('assets/bootstrap/css/bootstrap.min.css')); ?>
+        <!-- Le styles -->
+        <?php echo $this->headLink()
+            ->prependStylesheet($this->basePath('assets/zetta/css/zend-authentication.css'))
+            ->prependStylesheet($this->basePath('assets/animate.min.css'))
+            ->prependStylesheet($this->basePath('assets/font-awesome/css/font-awesome.min.css'))
+            ->prependStylesheet($this->basePath('css/beagle.css'))
+            ->prependStylesheet($this->basePath('assets/bootstrap/css/bootstrap.min.css')); ?>
 
-    <!-- Le inline styles -->
-    <?php echo $this->headStyle(); ?>
+        <!-- Le inline styles -->
+        <?php echo $this->headStyle(); ?>
 
-    <!-- Fav and touch icons -->
-    <link href="<?php echo $this->basePath('img/favicon.ico'); ?>" rel="shortcut icon" type="image/vnd.microsoft.icon">
+        <!-- Fav and touch icons -->
+        <link href="<?php echo $this->basePath('img/favicon.ico'); ?>" rel="shortcut icon" type="image/vnd.microsoft.icon">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="<?php echo $this->basePath('js/html5shiv.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('js/respond.min.js'); ?>"></script>
-    <![endif]-->
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script type="text/javascript" src="<?php echo $this->basePath('js/html5shiv.min.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->basePath('js/respond.min.js'); ?>"></script>
+        <![endif]-->
 
-    <!-- Start Scripts -->
-    <?php echo $this->headScript(); ?>
-    <!--  End Scripts-->
-</head>
-<body >
-    <!-- Start Content-->
-    <div class="container singin-fadeIn animated fadeInDown">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                <?php echo $this->content; ?>
+        <!-- Start Scripts -->
+        <?php echo $this->headScript(); ?>
+        <!--  End Scripts-->
+    </head>
+    <body class="splash-screen">
+        <!-- Start Content-->
+        <div class="wrapper login">
+            <div class="content">
+                <div class="main-content container-fluid">
+                    <?php echo $this->content; ?>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- End Content-->
+        <!-- End Content-->
 
-    <!-- Javascripts -->
-    <!-- Important javascript libs(put in all pages) -->
-    <script type="text/javascript" src="<?php echo $this->basePath('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath('assets/jquery/jquery.mask.min.js'); ?>"></script>
+        <!-- Javascripts -->
+        <!-- Important javascript libs(put in all pages) -->
+        <script type="text/javascript" src="<?php echo $this->basePath('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->basePath('assets/jquery/jquery.mask.min.js'); ?>"></script>
+        <script type="text/javascript">var basePath = '<?php echo $this->basePath(); ?>';</script>
 
-    <!-- Start Inline Scripts-->
-    <?php echo $this->inlineScript()
-        ->prependFile($this->basePath('assets/bootstrap/js/bootstrap.min.js'))
-        ->prependFile($this->basePath('js/default.js')); ?>
-    <!-- End Inline Scripts-->
-</body>
+        <!-- Start Inline Scripts-->
+        <?php echo $this->inlineScript()
+            ->prependFile($this->basePath('js/default.js'))
+            ->prependFile($this->basePath('assets/popper.min.js'))
+            ->prependFile($this->basePath('assets/bootstrap/js/bootstrap.min.js')); ?>
+        <!-- End Inline Scripts-->
+    </body>
 </html>

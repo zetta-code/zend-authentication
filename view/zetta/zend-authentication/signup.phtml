@@ -3,51 +3,47 @@ $title = $this->translate('Sign up');
 $this->headTitle($title);
 ?>
 
-<div class="signin-img text-center">
-    <a class="signin-logo" href="<?php echo $this->url($routes['home']['name'], $routes['home']['params'], $routes['home']['options'], $routes['home']['reuseMatchedParams']); ?>">
-        <img src="<?php echo $this->basePath('img/brand.svg') ?>" height="128" alt="<?php echo $this->translate('Home'); ?>">
-    </a>
-</div>
+<div class="splash-container sign-up">
+    <div class="card card-border-color card-border-color-primary">
+        <div class="card-header">
+            <a href="<?php echo $this->url($routes['home']['name'], $routes['home']['params'], $routes['home']['options'], $routes['home']['reuseMatchedParams']); ?>">
+                <img src="<?php echo $this->basePath('img/brand.svg') ?>" height="48" class="logo-img" alt="logo">
+            </a>
+            <span class="splash-description"><?php echo $this->translate('Please enter your user information.'); ?></span>
+        </div>
+        <div class="card-body">
+            <?php echo $this->zettaFlashMessenger(); ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title text-center"><?php echo $title ?></h3>
-    </div>
-    <div class="panel-body">
-        <?php echo $this->zettaFlashMessenger(); ?>
-        <?php echo $this->form()->openTag($form); ?>
-            <fieldset>
+            <?php echo $this->form()->openTag($form); ?>
+                <span class="splash-title pb-4"><?php echo $title ?></span>
+
                 <?php echo $this->formHidden($form->get('id')); ?>
 
                 <?php echo $this->zettaFormRow($form->get('username')); ?>
 
                 <?php echo $this->zettaFormRow($form->get('email')); ?>
 
-                <div class="form-group has-feedback<?php echo $form->get('password')->getMessages() !== [] ? ' has-error': ''; ?>">
+                <div class="form-group toogle-password<?php echo $form->get('password')->getMessages() !== [] ? ' has-error': ''; ?>">
                     <?php echo $this->formLabel($form->get('password')); ?>
                     <?php echo $this->formElement($form->get('password')); ?>
-                    <i class="fa show form-control-feedback" onclick="togglePassword('#signup-password'); return false;"></i>
+                    <i class="fa btn-toogle-password" onclick="togglePassword('#signup-password'); return false;"></i>
                     <?php echo $this->formElementErrors($form->get('password')); ?>
                 </div>
 
                 <?php echo $this->zettaFormRow($form->get('accepted-terms'), 'append'); ?>
 
-                <div class="row">
-                    <div class="col-xs-6">
-                        <!-- Change this to a button or input when using this as a form -->
-                        <?php echo $this->formRow($form->get('submit-btn')); ?>
-                    </div>
-                    <div class="col-xs-6">
-                        <div><?php echo $this->translate('Already have an account?'); ?></div>
-
-                        <strong>
-                            <a href="<?php echo $this->url($routes['signin']['name'], $routes['signin']['params'], $routes['signin']['options'], $routes['signin']['reuseMatchedParams']); ?>">
-                                <?php echo $this->translate('Please login'); ?>
-                            </a>
-                        </strong>
-                    </div>
+                <div class="form-group">
+                    <?php echo $this->formRow($form->get('submit-btn')); ?>
                 </div>
-            </fieldset>
-        <?php echo $this->form()->closeTag(); ?>
+            <?php echo $this->form()->closeTag(); ?>
+        </div>
+    </div>
+    <div class="splash-footer">
+        <span>
+            <?php echo $this->translate('Already have an account?'); ?>
+            <a href="<?php echo $this->url($routes['signin']['name'], $routes['signin']['params'], $routes['signin']['options'], $routes['signin']['reuseMatchedParams']); ?>">
+                <?php echo $this->translate('Please login'); ?>
+            </a>
+        </span>
     </div>
 </div>
