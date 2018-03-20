@@ -2955,12 +2955,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zetta-code/doctrine-util.git",
-                "reference": "e3dafc343b5e9b6ae4552dcd9b8a3916690710f4"
+                "reference": "3d07555d853c0898eaf17ac4617a471fc4457e27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zetta-code/doctrine-util/zipball/e3dafc343b5e9b6ae4552dcd9b8a3916690710f4",
-                "reference": "e3dafc343b5e9b6ae4552dcd9b8a3916690710f4",
+                "url": "https://api.github.com/repos/zetta-code/doctrine-util/zipball/3d07555d853c0898eaf17ac4617a471fc4457e27",
+                "reference": "3d07555d853c0898eaf17ac4617a471fc4457e27",
                 "shasum": ""
             },
             "require": {
@@ -3001,7 +3001,7 @@
                 "util",
                 "zf3"
             ],
-            "time": "2017-12-21T18:05:30+00:00"
+            "time": "2018-03-20T13:35:02+00:00"
         },
         {
             "name": "zetta-code/zend-bootstrap",
@@ -3009,12 +3009,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zetta-code/zend-bootstrap.git",
-                "reference": "e53c25802672fa053f96910f2643913baec305ec"
+                "reference": "3b2aee93e47b73dfa7772b6ef842cd9e3b77c729"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zetta-code/zend-bootstrap/zipball/e53c25802672fa053f96910f2643913baec305ec",
-                "reference": "e53c25802672fa053f96910f2643913baec305ec",
+                "url": "https://api.github.com/repos/zetta-code/zend-bootstrap/zipball/3b2aee93e47b73dfa7772b6ef842cd9e3b77c729",
+                "reference": "3b2aee93e47b73dfa7772b6ef842cd9e3b77c729",
                 "shasum": ""
             },
             "require": {
@@ -3060,7 +3060,7 @@
                 "bootstrap",
                 "zf3"
             ],
-            "time": "2017-06-06T20:07:11+00:00"
+            "time": "2018-03-20T13:36:28+00:00"
         }
     ],
     "packages-dev": [
