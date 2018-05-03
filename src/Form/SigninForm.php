@@ -11,7 +11,6 @@ use Zetta\ZendAuthentication\InputFilter\SigninFilter;
 
 class SigninForm extends Form
 {
-
     /**
      * SigninForm constructor.
      * @param string $name
@@ -29,10 +28,10 @@ class SigninForm extends Form
             'type' => 'text',
             'attributes' => [
                 'class' => 'form-control',
-                'placeholder' => _('Username'),
+                'placeholder' => _('Email'),
             ],
             'options' => [
-                'label' => _('Username'),
+                'label' => _('Email'),
                 'label_attributes' => ['class' => 'control-label'],
                 'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
             ],

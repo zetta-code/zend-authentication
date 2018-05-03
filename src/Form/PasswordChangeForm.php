@@ -11,7 +11,6 @@ use Zetta\ZendAuthentication\InputFilter\PasswordChangeFilter;
 
 class PasswordChangeForm extends Form
 {
-
     /**
      * PasswordChangeForm constructor.
      * @param string $name
@@ -26,15 +25,30 @@ class PasswordChangeForm extends Form
         $this->setInputFilter(new PasswordChangeFilter($options));
 
         $this->add([
-            'name' => 'password',
+            'name' => 'password-old',
             'type' => 'password',
             'attributes' => [
-                'id' => $name . '-password',
+                'id' => $name . '-password-old',
                 'class' => 'form-control',
-                'placeholder' => _('Password'),
+                'placeholder' => _('Current Password'),
             ],
             'options' => [
-                'label' => 'Password',
+                'label' => _('Current Password'),
+                'label_attributes' => ['class' => 'control-label'],
+                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'password-new',
+            'type' => 'password',
+            'attributes' => [
+                'id' => $name . '-password-new',
+                'class' => 'form-control',
+                'placeholder' => _('New Password'),
+            ],
+            'options' => [
+                'label' => _('New Password'),
                 'label_attributes' => ['class' => 'control-label'],
                 'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
             ],
@@ -44,7 +58,7 @@ class PasswordChangeForm extends Form
             'name' => 'submit-btn',
             'type' => 'Submit',
             'attributes' => [
-                'class' => 'btn btn-lg btn-block btn-primary',
+                'class' => 'btn btn-primary',
                 'value' => _('Change Password'),
                 'id' => $name . '-submit',
             ],

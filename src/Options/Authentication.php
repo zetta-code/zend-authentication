@@ -16,6 +16,13 @@ use Zend\Authentication\Adapter\Exception;
 class Authentication extends AuthenticationOptions
 {
     /**
+     * Property to use for the credential email
+     *
+     * @var string
+     */
+    protected $emailProperty;
+
+    /**
      * A valid object implementing ObjectRepository interface (or ObjectManager/identityClass)
      *
      * @var ObjectRepository
@@ -35,6 +42,27 @@ class Authentication extends AuthenticationOptions
      * @var string
      */
     protected $credentialIdentityProperty;
+
+    /**
+     * Credential type
+     *
+     * @var string
+     */
+    protected $credentialType;
+
+    /**
+     * Property to use for the credential type
+     *
+     * @var string
+     */
+    protected $credentialTypeProperty;
+
+    /**
+     * Role's class name
+     *
+     * @var string
+     */
+    protected $roleClass;
 
     /**
      * @return ObjectRepository
@@ -79,6 +107,32 @@ class Authentication extends AuthenticationOptions
     /**
      * @return string
      */
+    public function getEmailProperty()
+    {
+        return $this->emailProperty;
+    }
+
+    /**
+     * @param  string $emailProperty
+     * @throws Exception\InvalidArgumentException
+     * @return Authentication
+     */
+    public function setEmailProperty($emailProperty)
+    {
+        if (!is_string($emailProperty) || $emailProperty === '') {
+            throw new Exception\InvalidArgumentException(
+                sprintf('Provided $emailProperty is invalid, %s given', gettype($emailProperty))
+            );
+        }
+
+        $this->emailProperty = $emailProperty;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getCredentialIdentityProperty()
     {
         return $this->credentialIdentityProperty;
@@ -97,6 +151,76 @@ class Authentication extends AuthenticationOptions
         }
 
         $this->credentialIdentityProperty = $credentialIdentityProperty;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCredentialType()
+    {
+        return $this->credentialType;
+    }
+
+    /**
+     * @param  string $credentialType
+     * @throws Exception\InvalidArgumentException
+     * @return Authentication
+     */
+    public function setCredentialType($credentialType)
+    {
+        if (empty($credentialType)) {
+            throw new Exception\InvalidArgumentException(
+                sprintf('Provided $credentialType is invalid, %s given', gettype($credentialType))
+            );
+        }
+
+        $this->credentialType = $credentialType;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCredentialTypeProperty()
+    {
+        return $this->credentialTypeProperty;
+    }
+
+    /**
+     * @param  string $credentialTypeProperty
+     * @throws Exception\InvalidArgumentException
+     * @return Authentication
+     */
+    public function setCredentialTypeProperty($credentialTypeProperty)
+    {
+        if (!is_string($credentialTypeProperty) || $credentialTypeProperty === '') {
+            throw new Exception\InvalidArgumentException(
+                sprintf('Provided $credentialTypeProperty is invalid, %s given', gettype($credentialTypeProperty))
+            );
+        }
+
+        $this->credentialTypeProperty = $credentialTypeProperty;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoleClass()
+    {
+        return $this->roleClass;
+    }
+
+    /**
+     * @param string $roleClass
+     * @return Authentication
+     */
+    public function setRoleClass($roleClass)
+    {
+        $this->roleClass = $roleClass;
         return $this;
     }
 }

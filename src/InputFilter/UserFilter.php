@@ -14,14 +14,15 @@ use Zend\Validator;
 
 class UserFilter extends InputFilter
 {
-    const VALIDATION_PROFILE = [
-        'user' => ['id', 'name', 'email', 'avatar']
-    ];
-
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @var string
+     */
+    protected $name;
 
     /**
      * @var InputFilter
@@ -46,11 +47,13 @@ class UserFilter extends InputFilter
     /**
      * UserFilter constructor.
      * @param EntityManagerInterface $entityManager
+     * @param string $name
      * @param array $options
      */
-    public function __construct($entityManager, $options = [])
+    public function __construct($entityManager, $name = 'user', $options = [])
     {
         $this->entityManager = $entityManager;
+        $this->name = $name;
 
         if (isset($options['identityClass'])) {
             $this->identityClass = $options['identityClass'];
@@ -76,15 +79,22 @@ class UserFilter extends InputFilter
         $this->user->add([
             'name' => 'id',
             'required' => true,
-            'filters' => [['name' => Filter\ToInt::class]]
+            'filters' => [['name' => Filter\ToInt::class]],
+        ]);
+
+        $this->user->add([
+            'name' => 'role',
+            'required' => true,
+            'filters' => [['name' => Filter\ToInt::class]],
         ]);
 
         $this->user->add([
             'name' => 'username',
-            'required' => true,
+            'required' => false,
             'filters' => [
                 ['name' => Filter\StripTags::class],
                 ['name' => Filter\StringTrim::class],
+                ['name' => Filter\ToNull::class],
             ],
             'validators' => [
                 [
@@ -103,8 +113,8 @@ class UserFilter extends InputFilter
                         'object_repository' => $this->entityManager->getRepository($this->identityClass),
                         'fields' => $this->identityProperty,
                         'messages' => [
-                            UniqueObject::ERROR_OBJECT_NOT_UNIQUE => sprintf(_('The username %s already exists'), '\'%value%\'')
-                        ]
+                            UniqueObject::ERROR_OBJECT_NOT_UNIQUE => _('The username \'%value%\' already exists'),
+                        ],
                     ],
                 ],
             ],
@@ -132,8 +142,8 @@ class UserFilter extends InputFilter
                         'object_repository' => $this->entityManager->getRepository($this->identityClass),
                         'fields' => $this->emailProperty,
                         'messages' => [
-                            UniqueObject::ERROR_OBJECT_NOT_UNIQUE => sprintf(_('The email %s already exists'), '\'%value%\'')
-                        ]
+                            UniqueObject::ERROR_OBJECT_NOT_UNIQUE => _('The email \'%value%\' already exists'),
+                        ],
                     ],
                 ],
             ],
@@ -154,8 +164,8 @@ class UserFilter extends InputFilter
                         'min' => 6,
                         'max' => 128,
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->user->add([
@@ -170,7 +180,7 @@ class UserFilter extends InputFilter
                     'name' => Validator\StringLength::class,
                     'options' => [
                         'encoding' => 'UTF-8',
-                        'min' => 5,
+                        'min' => 2,
                         'max' => 256,
                     ],
                 ],
@@ -184,19 +194,75 @@ class UserFilter extends InputFilter
                 [
                     'name' => Filter\File\RenameUpload::class,
                     'options' => [
-                        'target' => './public/uploads/.png',
+                        'target' => './public/uploads/avatar.png',
                         'randomize' => true,
-                        'use_upload_extension ' => true
-                    ]
-                ]
+                        'use_upload_extension ' => true,
+                    ],
+                ],
             ],
             'validators' => [
                 [
-                    'name' => Validator\File\UploadFile::class
-                ]
-            ]
+                    'name' => Validator\File\UploadFile::class,
+                ],
+            ],
         ]);
 
-        $this->add($this->user, 'user');
+        $this->user->add([
+            'name' => 'gender',
+            'required' => true,
+            'filters' => [['name' => Filter\ToInt::class]],
+        ]);
+
+        $this->user->add([
+            'name' => 'birthday',
+            'required' => true,
+            'filters' => [
+                ['name' => Filter\StringTrim::class],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\ToNull::class],
+
+            ],
+            'validators' => [
+                [
+                    'name' => Validator\Date::class,
+                    'options' => [
+                        'format' => 'd/m/Y',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->user->add([
+            'name' => 'bio',
+            'required' => false,
+            'filters' => [
+                ['name' => Filter\StringTrim::class],
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\ToNull::class],
+            ],
+        ]);
+
+        $this->add($this->user, $this->name);
+    }
+
+    public function getNewValidationGroup()
+    {
+        return [
+            $this->name => ['id', 'role', 'username', 'email', 'password', 'name', 'avatar', 'gender', 'birthday', 'bio']
+        ];
+    }
+
+    public function getProfileValidationGroup()
+    {
+        return [
+            $this->name => ['id', 'username', 'email', 'name', 'avatar', 'gender', 'birthday', 'bio']
+        ];
+    }
+
+    public function getSignupValidationGroup()
+    {
+        return [
+            $this->name => ['id', 'email', 'password', 'name']
+        ];
     }
 }

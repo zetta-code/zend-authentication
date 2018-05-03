@@ -14,7 +14,7 @@ use Zetta\ZendAuthentication\Options\Authentication as AuthenticationOptions;
 /**
  * Authentication adapter that uses a Doctrine object for verification.
  */
-class CredentialRepository extends ObjectRepository
+class Credential extends ObjectRepository
 {
     /**
      * @var AuthenticationOptions
@@ -46,50 +46,6 @@ class CredentialRepository extends ObjectRepository
     }
 
     /**
-     * Set the value to be used as the identity
-     *
-     * @param  mixed $identityValue
-     * @return CredentialRepository
-     * @deprecated use setIdentity instead
-     */
-    public function setIdentityValue($identityValue)
-    {
-        $this->identity = $identityValue;
-        return $this;
-    }
-
-    /**
-     * @return string
-     * @deprecated use getIdentity instead
-     */
-    public function getIdentityValue()
-    {
-        return $this->identity;
-    }
-
-    /**
-     * Set the credential value to be used.
-     *
-     * @param  mixed $credentialValue
-     * @return CredentialRepository
-     * @deprecated use setCredential instead
-     */
-    public function setCredentialValue($credentialValue)
-    {
-        $this->credential = $credentialValue;
-        return $this;
-    }
-
-    /**
-     * @return string
-     * @deprecated use getCredential instead
-     */
-    public function getCredentialValue()
-    {
-        return $this->credential;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function authenticate()
@@ -97,9 +53,17 @@ class CredentialRepository extends ObjectRepository
         $options = $this->options;
         if ($options->getIdentityClass() != null) {
             $this->setup();
+            // identityProperty
             $identity = $options
                 ->getObjectRepository()
                 ->findOneBy([$options->getIdentityProperty() => $this->identity]);
+
+            // emailProperty
+            if (!$identity) {
+                $identity = $options
+                    ->getObjectRepository()
+                    ->findOneBy([$options->getEmailProperty() => $this->identity]);
+            }
 
             if (!$identity) {
                 $this->authenticationResultInfo['code'] = AuthenticationResult::FAILURE_IDENTITY_NOT_FOUND;
@@ -145,7 +109,7 @@ class CredentialRepository extends ObjectRepository
             ->getCredentialRepository()
             ->findOneBy([
                 $options->getCredentialIdentityProperty() => $identity,
-                $options->getCredentialProperty() => $this->credential
+                $options->getCredentialTypeProperty() => $options->getCredentialType()
             ]);
 
         if (!$credential) {
@@ -176,14 +140,33 @@ class CredentialRepository extends ObjectRepository
         }
 
         $callable = $this->options->getCredentialCallable();
-
         if ($callable) {
-            $credentialValue = call_user_func($callable, $identity, $credential);
+            $credentialValid = call_user_func($callable, $identity, $credential, $this->credential);
         } else {
-            $credentialValue = $identity;
+            $credentialProperty = $options->getCredentialProperty();
+            $getter = 'get' . ucfirst($credentialProperty);
+            $credentialValue = null;
+
+            if (method_exists($credential, $getter)) {
+                $credentialValue = $credential->$getter();
+            } elseif (property_exists($credential, $credentialProperty)) {
+                $credentialValue = $credential->{$credentialProperty};
+            } else {
+                throw new Exception\UnexpectedValueException(
+                    sprintf(
+                        'Property (%s) in (%s) is not accessible. You should implement %s::%s()',
+                        $credentialProperty,
+                        get_class($credential),
+                        get_class($credential),
+                        $getter
+                    )
+                );
+            }
+
+            $credentialValid = $identity === $credentialIdentity && $this->credential === $credentialValue;
         }
 
-        if ($credentialValue !== true && $credentialValue !== $credentialIdentity) {
+        if ($credentialValid !== true) {
             $this->authenticationResultInfo['code'] = AuthenticationResult::FAILURE_CREDENTIAL_INVALID;
             $this->authenticationResultInfo['messages'][] = 'Supplied credential is invalid.';
 

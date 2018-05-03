@@ -49,5 +49,11 @@ class SigninFilter extends InputFilter
                 ],
             ],
         ]);
+
+        $this->add([
+            'name' => 'remember-me',
+            'required' => false,
+            'filters' => [['name' => Filter\ToInt::class]],
+        ]);
     }
 }

@@ -15,6 +15,14 @@ use Zend\View\Model\ViewModel;
 
 class UnauthorizedStrategy extends AbstractListenerAggregate
 {
+    const NOT_ALLOW = 'not-allow';
+
+    /**
+     * Display exceptions?
+     * @var bool
+     */
+    protected $displayExceptions = true;
+
     /**
      * @var string
      */
@@ -35,6 +43,28 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'prepareExceptionViewModel'], -5000);
+    }
+
+    /**
+     * Flag: display exceptions in error pages?
+     *
+     * @param  bool $displayExceptions
+     * @return UnauthorizedStrategy
+     */
+    public function setDisplayExceptions($displayExceptions)
+    {
+        $this->displayExceptions = (bool) $displayExceptions;
+        return $this;
+    }
+
+    /**
+     * Should we display exceptions in error pages?
+     *
+     * @return bool
+     */
+    public function displayExceptions()
+    {
+        return $this->displayExceptions;
     }
 
     /**
@@ -83,12 +113,16 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
         }
 
         switch ($error) {
-            case 'not-allow':
+            case self::NOT_ALLOW:
+                $exception = $e->getParam('exception');
                 $model = new ViewModel([
-                    'message'    => 'An error occurred during execution; please try again later.',
-                    'role'       => $e->getParam('role'),
-                    'controller' => $e->getParam('controller'),
-                    'action'     => $e->getParam('action'),
+                    'code'               => $exception->getCode(),
+                    'message'            => $e->getParam('message'),
+                    'role'               => $e->getParam('role'),
+                    'controller'         => $e->getParam('controller'),
+                    'action'             => $e->getParam('action'),
+                    'exception'          => $exception,
+                    'display_exceptions' => $this->displayExceptions(),
                 ]);
                 $model->setTemplate($this->getTemplate());
                 $e->setResult($model);

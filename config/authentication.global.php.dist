@@ -14,81 +14,84 @@ return [
                 'name' => 'home',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'redirect' => [
                 'name' => 'home',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'authenticate' => [
                 'name' => 'authentication/authenticate',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'confirm-email' => [
                 'name' => 'authentication/confirm-email',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'password-recover' => [
                 'name' => 'authentication/password-recover',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'recover' => [
                 'name' => 'authentication/recover',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'signin' => [
                 'name' => 'authentication/signin',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'signout' => [
                 'name' => 'authentication/signout',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'signup' => [
                 'name' => 'authentication/signup',
                 'params' => [],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'account' => [
                 'name' => 'authentication/default',
                 'params' => ['controller' => 'account'],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
             'password-change' => [
                 'name' => 'authentication/default',
                 'params' => ['controller' => 'account', 'action' => 'password-change'],
                 'options' => [],
-                'reuseMatchedParams' => false
+                'reuseMatchedParams' => false,
             ],
         ],
         'options' => [
-            'identityClass' => Zetta\ZendAuthentication\Entity\AbstractUser::class,
-            'credentialClass' => Zetta\ZendAuthentication\Entity\AbstractCredential::class,
-            'roleClass' => Zetta\ZendAuthentication\Entity\AbstractRole::class,
+            'identityClass' => Zetta\ZendAuthentication\Entity\UserInterface::class,
+            'credentialClass' => Zetta\ZendAuthentication\Entity\CredentialInterface::class,
+            'roleClass' => Zetta\ZendAuthentication\Entity\RoleInterface::class,
             'identityProperty' => 'username',
             'emailProperty' => 'email',
             'credentialProperty' => 'value',
             'credentialIdentityProperty' => 'user',
-            'credentialType' => Zetta\ZendAuthentication\Entity\AbstractCredential::TYPE_PASSWORD,
-            'credentialCallable' => 'Zetta\ZendAuthentication\Entity\AbstractUser::checkPassword',
+            'credentialTypeProperty' => 'type',
+            'credentialType' => 1,
+            'credentialCallable' => 'Zetta\ZendAuthentication\Entity\CredentialInterface::check',
+        ],
+        'default' => [
             'signAllowed' => false,
-            'roleDefault' => 2,
+            'role' => 2,
         ],
         'acl' => [
             'defaultRole' => 'Guest',
@@ -100,7 +103,7 @@ return [
             'resources' => [
                 'allow' => [
                     'Zetta\ZendAuthentication\Controller\Account' => [
-                        '' => ['Member']
+                        '' => ['Member'],
                     ],
                     'Zetta\ZendAuthentication\Controller\Auth' => [
                         'authenticate' => ['Guest'],
@@ -109,15 +112,18 @@ return [
                         'recover' => ['Guest'],
                         'signin' => ['Guest'],
                         'signout' => ['Guest'],
-                        'signup' => ['Guest']
-                    ]
+                        'signup' => ['Guest'],
+                    ],
+                    'Zetta\ZendAuthentication\Menu' => [
+                        'account' => ['Member'],
+                    ],
                 ],
                 'deny' => [
                     'Zetta\ZendAuthentication\Controller\Auth' => [
-                        'signup' => ['Member']
+                        'signup' => ['Member'],
                     ],
-                ]
-            ]
-        ]
-    ]
+                ],
+            ],
+        ],
+    ],
 ];

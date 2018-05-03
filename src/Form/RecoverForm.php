@@ -12,7 +12,6 @@ use Zetta\ZendAuthentication\InputFilter\RecoverFilter;
 
 class RecoverForm extends Form
 {
-
     /**
      * RecoverForm constructor.
      * @param string $name

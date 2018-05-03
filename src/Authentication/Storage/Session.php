@@ -100,10 +100,20 @@ class Session extends \Zend\Authentication\Storage\Session
     }
 
     /**
+     * Forget me
      * @return void
      */
     public function forgetMe()
     {
         $this->session->getManager()->forgetMe();
+    }
+
+    /**
+     * Expire session cookie
+     * @return void
+     */
+    public function expireSessionCookie()
+    {
+        $this->session->getManager()->expireSessionCookie();
     }
 }

@@ -14,13 +14,16 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 class AuthControllerFactory implements FactoryInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $entityManager = $container->get(EntityManager::class);
         $authenticationService = $container->get(AuthenticationService::class);
         $translator = $container->get(Translator::class);
-        $configuration = $container->get('Configuration');
-        $config = $configuration['zend_authentication'];
+        $config = $container->get('config');
+        $config = $config['zend_authentication'];
 
         return new $requestedName($entityManager, $authenticationService, $translator, $config);
     }

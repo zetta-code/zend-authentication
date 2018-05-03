@@ -8,7 +8,6 @@ namespace Zetta\ZendAuthentication;
 
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response;
-use Zend\Mvc\Application;
 use Zend\Mvc\ApplicationInterface;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
 use Zend\Mvc\ModuleRouteListener;
@@ -16,11 +15,12 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Session\SessionManager;
 use Zend\Stdlib\ArrayObject;
 use Zend\Stdlib\ArrayUtils;
-use Zend\Stdlib\ResponseInterface;
 use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
+use Zetta\ZendAuthentication\Exception\ResourceNotFoundException;
 use Zetta\ZendAuthentication\Exception\UnauthorizedException;
 use Zetta\ZendAuthentication\View\UnauthorizedStrategy;
 
@@ -57,9 +57,10 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventeManager);
 
-        $this->getServiceManager()->get(UnauthorizedStrategy::class)->attach($eventeManager);
+        $this->getServiceManager()->get(SessionManager::class);
 
         $eventeManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuthentication']);
+        $this->getServiceManager()->get(UnauthorizedStrategy::class)->attach($eventeManager);
     }
 
     /**
@@ -75,66 +76,71 @@ class Module
 
     /**
      * @param MvcEvent $e
-     * @return ResponseInterface
+     * @return void
      * @throws \Exception
      */
     public function checkAuthentication(MvcEvent $e)
     {
+        // Do nothing if no route match
         $matches = $e->getRouteMatch();
         if (!$matches instanceof RouteMatch) {
-            return null;
+            return;
         }
 
-        //framework error
-        $eventParams = $e->getParams();
-        if (isset($eventParams['error'])) {
-            /** @var \Zend\Http\PhpEnvironment\Response $response */
-            $response = $e->getResponse();
-            switch ($eventParams['error']) {
-                case Application::ERROR_CONTROLLER_NOT_FOUND:
-                    $response->setStatusCode(Response::STATUS_CODE_501);
-                    break;
+        // Do nothing if the result is a response object
+        $result = $e->getResult();
+        if ($result instanceof Response) {
+            return;
+        }
 
-                case Application::ERROR_ROUTER_NO_MATCH:
-                    $response->setStatusCode(Response::STATUS_CODE_501);
-                    break;
-
-                default:
-                    $response->setStatusCode(Response::STATUS_CODE_500);
-                    break;
-            }
-            $e->stopPropagation();
-            return null;
+        // Not handling
+        if ($e->getError()) {
+            return;
         }
 
         $controller = $matches->getParam('controller');
         $action = $matches->getParam('action');
+        if (!$this->serviceManager->get('ControllerManager')->has($controller)) {
+            return;
+        }
 
         $config = $this->getServiceManager()->get('config');
         $auth = $this->getServiceManager()->get(AuthenticationService::class);
         $acl = $this->getServiceManager()->get(Permissions\Acl\Acl::class);
         $navigation = $this->getHelperManager()->get('navigation');
-        $role = $acl->getDefaultRole();
+        if ($auth->hasIdentity()) {
+            $identity = $auth->getIdentity();
+            $role = $auth->getIdentity()->role();
+        } else {
+            $identity = null;
+            $role = $acl->getDefaultRole();
+        }
+
         $navigation->setAcl($acl)->setRole($role);
 
         if (!$acl->hasResource($controller)) {
             $e->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-            $e->setError(Application::ERROR_EXCEPTION);
-            $e->setParam('exception', new \Exception('Resource ' . $controller . ' not defined', Response::STATUS_CODE_501));
-            $return = $this->application->getEventManager()->triggerEvent($e);
-            if (! $return) {
+            $e->setError(UnauthorizedStrategy::NOT_ALLOW);
+            $e->setController($controller);
+            $e->setControllerClass($controller);
+            $e->setParam('message', 'Resource not found.');
+            $e->setParam('exception', new ResourceNotFoundException(sprintf('ACL Resource %s not found', $controller), Response::STATUS_CODE_501));
+            $e->setParam('controller', $controller);
+            $return = $this->application->getEventManager()->triggerEvent($e)->last();
+            if (!$return) {
                 $return = $e->getResult();
             }
-            if (! is_object($return)) {
+            if (!is_object($return)) {
                 if (ArrayUtils::hasStringKeys($return)) {
                     $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
                 }
             }
             $e->setResult($return);
-            return null;
+
+            return;
         }
 
-        if (!$auth->hasIdentity()) {
+        if ($identity === null) {
             // Authentication
             if (!$acl->isAllowed($role, $controller, $action)) {
                 /** @var FlashMessenger $flashMessenger */
@@ -158,38 +164,38 @@ class Module
 
                 $e->stopPropagation();
 
-                return $response;
+                return;
             }
         } else {
             // Authorization
-            $identity = $auth->getIdentity();
-            $role = $auth->getIdentity()->role();
-
             if (!$acl->isAllowed($role, $controller, $action)) {
                 $e->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-                $e->setError('not-allow');
+                $e->setError(UnauthorizedStrategy::NOT_ALLOW);
                 $e->setController($controller);
                 $e->setControllerClass($controller);
-                $e->setParam('exception', new UnAuthorizedException(sprintf('You are not authorized to access %s:%s', $controller, $action), 403));
+                $e->setParam('message', 'You are not authorized.');
+                $e->setParam('exception', new UnauthorizedException(sprintf('You are not authorized to access %s:%s', $controller, $action), Response::STATUS_CODE_403));
                 $e->setParam('identity', $identity);
                 $e->setParam('controller', $controller);
                 $e->setParam('action', $action);
                 $return = $this->application->getEventManager()->triggerEvent($e)->last();
-                if (! $return) {
+                if (!$return) {
                     $return = $e->getResult();
                 }
-                if (! is_object($return)) {
+                if (!is_object($return)) {
                     if (ArrayUtils::hasStringKeys($return)) {
                         $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
                     }
                 }
                 $e->setResult($return);
+
+                return;
             } else {
                 $navigation->setRole($role);
             }
         }
 
-        return null;
+        return;
     }
 
     /**

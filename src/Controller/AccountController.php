@@ -11,17 +11,26 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
+use Zetta\ZendAuthentication\Entity\Enum\Gender;
 use Zetta\ZendAuthentication\Entity\UserInterface;
 use Zetta\ZendAuthentication\Form\PasswordChangeForm;
 use Zetta\ZendAuthentication\Form\UserForm;
-use Zetta\ZendAuthentication\InputFilter\UserFilter;
 
+/**
+ * Class AccountController
+ * @method UserInterface identity()
+ */
 class AccountController extends AbstractActionController
 {
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @var array
+     */
+    protected $config;
 
     /**
      * @var array
@@ -41,25 +50,31 @@ class AccountController extends AbstractActionController
     public function __construct(EntityManagerInterface $entityManager, array $config)
     {
         $this->entityManager = $entityManager;
-        $this->setOptions($config);
+        $this->setConfig($config);
     }
 
     /**
+     * Get the AccountController config
      * @return array
      */
-    public function getOptions()
+    public function getConfig()
     {
-        return $this->options;
+        return $this->config;
     }
 
     /**
-     * @param array $options
+     * Set the AccountController config
+     * @param array $config
+     * @return AccountController
      */
-    public function setOptions($options)
+    public function setConfig($config)
     {
+        $this->config = $config;
 
-        $this->routes = $options['routes'];
-        $this->options = $options['options'];
+        $this->routes = $config['routes'];
+        $this->options = $config['options'];
+
+        return $this;
     }
 
     /**
@@ -67,12 +82,12 @@ class AccountController extends AbstractActionController
      */
     public function indexAction()
     {
-        /** @var UserInterface $user */
         $user = $this->identity();
 
         $form = new UserForm($this->entityManager, 'user', $this->options);
-        $form->setValidationGroup(UserFilter::VALIDATION_PROFILE);
+        $form->setValidationGroup($form->getInputFilter()->getProfileValidationGroup());
         $form->setAttribute('action', $this->url()->fromRoute($this->routes['account']['name'], $this->routes['account']['params'], $this->routes['account']['options'], $this->routes['account']['reuseMatchedParams']));
+        $form->getInputFilter()->get('user')->get($this->options['identityProperty'])->setRequired($user->getUsername() !== null);
         $form->bind($user);
         $form->get('submit-btn')->setValue(_('Update'));
 
@@ -85,11 +100,16 @@ class AccountController extends AbstractActionController
 
             if ($form->isValid()) {
                 $this->thumbnail()->process($user->getAvatar(null), $user->getAvatar(null));
+                if ($user->getAvatar(null) === $this->thumbnail()->getDefaultThumbnailPath() && $user->getGender() === Gender::FEMALE) {
+                    $user->setAvatar($this->thumbnail()->getGirlThumbnailPath());
+                } elseif ($user->getAvatar(null) === $this->thumbnail()->getGirlThumbnailPath() && $user->getGender() === Gender::MALE) {
+                    $user->setAvatar($this->thumbnail()->getDefaultThumbnailPath());
+                }
                 $this->entityManager->flush();
-                $this->flashMessenger()->addInfoMessage(_('Profile updated with success!'));
+                $this->flashMessenger()->addInfoMessage(_('Your profile has been updated.'));
                 return $this->redirect()->toRoute($this->routes['account']['name'], $this->routes['account']['params'], $this->routes['account']['options'], $this->routes['account']['reuseMatchedParams']);
             } else {
-                $this->flashMessenger()->addErrorMessage(_('Form with errors!'));
+                $this->flashMessenger()->addErrorMessage(_('Your profile could not be saved. Please, try again.'));
             }
         }
 
@@ -123,21 +143,19 @@ class AccountController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $user, 'type' => $this->options['credentialType']]);
-                $passwordOld = sha1(sha1($data['password-old']));
-                $passwordNew = sha1(sha1($data['password-new']));
-                $password = $credential->getValue();
+                $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $user, $this->options['credentialTypeProperty'] => $this->options['credentialType']]);
 
-                if ($password == $passwordOld) {
-                    $credential->setValue($passwordNew);
+                if ($credential->verifyValue($data['password-old'])) {
+                    $credential->setValue($data['password-new']);
+                    $credential->hashValue();
                     $this->entityManager->flush();
-                    $this->flashMessenger()->addSuccessMessage(_('Your password has been changed successfully!'));
+                    $this->flashMessenger()->addSuccessMessage(_('Your password has been changed.'));
                     return $this->redirect()->toRoute($this->routes['account']['name'], $this->routes['account']['params'], $this->routes['account']['options'], $this->routes['account']['reuseMatchedParams']);
                 } else {
-                    $this->flashMessenger()->addErrorMessage(_('Your current password is incorrect.'));
+                    $this->flashMessenger()->addErrorMessage(_('Your current password is incorrect. Please, try again.'));
                 }
             } else {
-                $this->flashMessenger()->addErrorMessage(_('Form with errors!'));
+                $this->flashMessenger()->addErrorMessage(_('Your password could not be saved. Please, try again.'));
             }
         }
 

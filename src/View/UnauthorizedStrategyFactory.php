@@ -30,6 +30,6 @@ class UnauthorizedStrategyFactory implements FactoryInterface
 
         $template = isset($config['unauthorized_template']) ? $config['unauthorized_template'] : 'error/403';
 
-        return new UnauthorizedStrategy($template);
+        return new $requestedName($template);
     }
 }

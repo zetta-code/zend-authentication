@@ -64,6 +64,18 @@ interface CredentialInterface
     public function setValue($value);
 
     /**
+     * Hash the Credential value
+     * @return CredentialInterface
+     */
+    public function hashValue();
+
+    /**
+     * Verify the Credential value
+     * @return bool
+     */
+    public function verifyValue($value);
+
+    /**
      * Get the Credential active
      * @return bool
      */
@@ -80,7 +92,8 @@ interface CredentialInterface
      * Check a credential
      * @param UserInterface $user
      * @param CredentialInterface $credential
+     * @param string $value
      * @return bool
      */
-    public static function check(UserInterface $user, CredentialInterface $credential);
+    public static function check(UserInterface $user, CredentialInterface $credential, $value);
 }

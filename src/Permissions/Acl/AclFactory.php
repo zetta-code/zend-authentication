@@ -12,17 +12,15 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 class AclFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
-     * @return Acl
+     * @inheritdoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $configuration = $container->get('Configuration');
-        $config = $configuration['zend_authentication'];
+        $config = $container->get('config');
+        $config = isset($config['zend_authentication']) && isset($config['zend_authentication']['acl'])
+            ? $config['zend_authentication']['acl']
+            : [];
 
-        return new Acl($config['acl']);
+        return new $requestedName($config);
     }
-
 }

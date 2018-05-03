@@ -19,7 +19,16 @@ class PasswordChangeFilter extends InputFilter
     public function __construct($options = [])
     {
         $this->add([
-            'name' => 'password',
+            'name' => 'password-old',
+            'required' => true,
+            'filters' => [
+                ['name' => Filter\StripTags::class],
+                ['name' => Filter\StringTrim::class],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'password-new',
             'required' => true,
             'filters' => [
                 ['name' => Filter\StripTags::class],

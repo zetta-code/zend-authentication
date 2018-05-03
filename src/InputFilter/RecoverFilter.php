@@ -30,7 +30,7 @@ class RecoverFilter extends InputFilter
                 [
                     'name' => EmailAddress::class,
                     'options' => [
-                        'message' => _('Invalid email address')
+                        'message' => _('Invalid email address'),
                     ],
                 ],
             ],

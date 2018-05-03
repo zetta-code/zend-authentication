@@ -12,11 +12,14 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 class AccountControllerFactory implements FactoryInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $entityManager = $container->get(EntityManager::class);
-        $configuration = $container->get('Configuration');
-        $config = $configuration['zend_authentication'];
+        $config = $container->get('config');
+        $config = $config['zend_authentication'];
 
         return new $requestedName($entityManager, $config);
     }

@@ -7,24 +7,20 @@
 namespace Zetta\ZendAuthentication\Authentication;
 
 use Interop\Container\ContainerInterface;
-use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zetta\ZendAuthentication\Authentication\Adapter\CredentialRepository;
+use Zetta\ZendAuthentication\Authentication\Adapter\Credential;
 use Zetta\ZendAuthentication\Authentication\Storage\Session;
 
 class AuthenticationServiceFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
-     * @return AuthenticationService
+     * @inheritdoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $storage = $container->get(Session::class);
-        $adapter = $container->get(CredentialRepository::class);
+        $adapter = $container->get(Credential::class);
 
-        return new AuthenticationService($storage, $adapter);
+        return new $requestedName($storage, $adapter);
     }
 }

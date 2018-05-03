@@ -144,7 +144,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            Authentication\Adapter\CredentialRepository::class => Authentication\Adapter\CredentialRepositoryFactory::class,
+            Authentication\Adapter\Credential::class => Authentication\Adapter\CredentialFactory::class,
             Authentication\Storage\Session::class => Authentication\Storage\SessionFactory::class,
             AuthenticationService::class => Authentication\AuthenticationServiceFactory::class,
             Permissions\Acl\Acl::class => Permissions\Acl\AclFactory::class,

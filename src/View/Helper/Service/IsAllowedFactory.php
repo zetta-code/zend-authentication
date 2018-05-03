@@ -11,10 +11,12 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Permissions\Acl\Role\GenericRole;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Permissions\Acl\Acl;
-use Zetta\ZendAuthentication\View\Helper\IsAllowed;
 
 class IsAllowedFactory implements FactoryInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $auth = $container->get(AuthenticationService::class);
@@ -22,7 +24,6 @@ class IsAllowedFactory implements FactoryInterface
 
         $role = $auth->hasIdentity() ? new GenericRole($auth->getIdentity()->getRoleName()) : $acl->getDefaultRole();
 
-        return new IsAllowed($acl, $role);
+        return new $requestedName($acl, $role);
     }
-
 }

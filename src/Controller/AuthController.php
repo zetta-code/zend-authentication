@@ -11,15 +11,22 @@ use Zend\Authentication\AuthenticationService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ArrayUtils;
+use Zend\Uri\Uri;
 use Zend\View\Model\ViewModel;
+use Zetta\ZendAuthentication\Authentication\Adapter\Credential;
+use Zetta\ZendAuthentication\Authentication\Storage\Session;
 use Zetta\ZendAuthentication\Entity\CredentialInterface;
 use Zetta\ZendAuthentication\Entity\RoleInterface;
 use Zetta\ZendAuthentication\Entity\UserInterface;
 use Zetta\ZendAuthentication\Form\PasswordChangeForm;
 use Zetta\ZendAuthentication\Form\RecoverForm;
 use Zetta\ZendAuthentication\Form\SigninForm;
-use Zetta\ZendAuthentication\Form\SignupForm;
+use Zetta\ZendAuthentication\Form\UserForm;
 
+/**
+ * Class AuthController
+ * @method UserInterface identity()
+ */
 class AuthController extends AbstractActionController
 {
     /**
@@ -36,6 +43,11 @@ class AuthController extends AbstractActionController
      * @var TranslatorInterface
      */
     protected $translator;
+
+    /**
+     * @var array
+     */
+    protected $config;
 
     /**
      * @var array
@@ -69,42 +81,48 @@ class AuthController extends AbstractActionController
         $this->entityManager = $entityManager;
         $this->authenticationService = $authenticationService;
         $this->translator = $translator;
-        $this->setOptions($config);
+        $this->setConfig($config);
     }
 
     /**
+     * Get the AuthController config
      * @return array
      */
-    public function getOptions()
+    public function getConfig()
     {
-        return $this->options;
+        return $this->config;
     }
 
     /**
-     * @param array $options
+     * Set the AuthController config
+     * @param array $config
+     * @return AuthController
      */
-    public function setOptions($options)
+    public function setConfig($config)
     {
-        $this->routes = $options['routes'];
-        $this->templates = $options['templates'];
-        $this->options = $options['options'];
+        $this->config = $config;
 
-        $this->layoutView = $options['layout'];
+        $this->routes = $config['routes'];
+        $this->templates = $config['templates'];
+        $this->options = $config['options'];
+        $this->layoutView = $config['layout'];
+
+        return $this;
     }
 
     /**
      * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
      */
     public function signinAction()
     {
-        if ($this->identity()) {
-            return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
-        }
+        $redirectUrl = trim($this->params()->fromQuery('redirect', ''));
+        $options = $this->verifyRedirect($redirectUrl, $this->routes['authenticate']['options']);
 
-        $options = $this->routes['authenticate']['options'];
-        $redirect = trim($this->params()->fromQuery('redirect', ''));
-        if ($redirect !== '') {
-            $options = ArrayUtils::merge($options, ['query' => ['redirect' => $redirect]]);
+        if ($this->identity()) {
+            return $redirectUrl !== ''
+                ? $this->redirect()->toUrl($redirectUrl)
+                : $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         }
 
         $form = new SigninForm();
@@ -124,17 +142,17 @@ class AuthController extends AbstractActionController
 
     /**
      * @return \Zend\Http\Response
+     * @throws \Exception
      */
     public function authenticateAction()
     {
-        if ($this->identity()) {
-            return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
-        }
+        $redirectUrl = trim($this->params()->fromQuery('redirect', ''));
+        $options = $this->verifyRedirect($redirectUrl, $this->routes['authenticate']['options']);
 
-        $options = $this->routes['signin']['options'];
-        $redirect = trim($this->params()->fromQuery('redirect', ''));
-        if ($redirect !== '') {
-            $options = ArrayUtils::merge($options, ['query' => ['redirect' => $redirect]]);
+        if ($this->identity()) {
+            return $redirectUrl !== ''
+                ? $this->redirect()->toUrl($redirectUrl)
+                : $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         }
 
         $form = new SigninForm();
@@ -143,32 +161,31 @@ class AuthController extends AbstractActionController
             $post = $request->getPost();
             $form->setData($post);
             if ($form->isValid()) {
-
+                $data = $form->getData();
+                /** @var Credential $authAdapter */
                 $authAdapter = $this->authenticationService->getAdapter();
-                $authAdapter->setIdentityValue($form->get('username')->getValue());
-                $authAdapter->setCredentialValue(sha1(sha1($form->get('password')->getValue())));
+                $authAdapter->setIdentity($data['username']);
+                $authAdapter->setCredential($data['password']);
 
                 $authResult = $this->authenticationService->authenticate();
 
                 if ($authResult->isValid()) {
                     $identity = $authResult->getIdentity();
 
+                    /** @var Session $authStorage */
                     $authStorage = $this->authenticationService->getStorage();
-                    if ($form->get('remember-me')->getValue() == 1) {
-                        $authStorage->setRememberMe(1);
+                    if ($data['remember-me'] === 1) {
+                        $authStorage->setRememberMe(true);
                     }
                     $authStorage->write($identity);
 
-                    $this->flashMessenger()->addSuccessMessage(_('Sign in with success!'));
+                    $this->flashMessenger()->addSuccessMessage(_('You\'re conected!'));
 
-                    if ($redirect !== '') {
-                        return $this->redirect()->toUrl($redirect);
-                    } else {
-                        return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
-                    }
-
+                    return $redirectUrl !== ''
+                        ? $this->redirect()->toUrl($redirectUrl)
+                        : $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
                 } else {
-                    $this->flashMessenger()->addErrorMessage(_('Username or password is invalid.'));
+                    $this->flashMessenger()->addErrorMessage(_('Email or password is invalid.'));
                 }
             }
         }
@@ -185,8 +202,7 @@ class AuthController extends AbstractActionController
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
         }
 
-        $this->authenticationService->getStorage()->forgetMe();
-        $this->authenticationService->clearIdentity();
+        $this->authenticationService->getStorage()->expireSessionCookie();
         $this->flashMessenger()->addErrorMessage(_('You\'re disconected!'));
         return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
     }
@@ -203,7 +219,8 @@ class AuthController extends AbstractActionController
             return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         }
 
-        $form = new SignupForm($this->entityManager, 'signup', $this->options);
+        $form = new UserForm($this->entityManager, 'signup', $this->options);
+        $form->setValidationGroup($form->getInputFilter()->getSignupValidationGroup());
         $form->setAttribute('action', $this->url()->fromRoute($this->routes['signup']['name'], $this->routes['signup']['params'], $this->routes['signup']['options'], $this->routes['signup']['reuseMatchedParams']));
         $identityClass = $this->options['identityClass'];
         /** @var UserInterface $user */
@@ -215,20 +232,22 @@ class AuthController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $data = $form->getData();
                 $credentialClass = $this->options['credentialClass'];
                 /** @var CredentialInterface $credential */
                 $credential = new $credentialClass();
                 $credential->setType($this->options['credentialType']);
-                $credential->setValue(sha1(sha1($form->get('password')->getValue())));
+                $credential->setValue($data['password']);
+                $credential->hashValue();
                 $credential->setUser($user);
 
                 /** @var RoleInterface $role */
-                $role = $this->entityManager->find($this->options['roleClass'], $this->options['roleDefault']);
+                $role = $this->entityManager->find($this->options['roleClass'], $this->config['default']['role']);
                 $user->role($role);
 
                 $user->setAvatar($this->thumbnail()->getDefaultThumbnailPath());
-                $user->setSignAllowed($this->options['signAllowed']);
-                $user->setToken(sha1(uniqid(mt_rand(), true)));
+                $user->setSignAllowed($this->config['default']['role']);
+                $user->generateToken();
 
                 $this->entityManager->persist($user);
                 $this->entityManager->persist($credential);
@@ -251,10 +270,13 @@ class AuthController extends AbstractActionController
 
                 return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
             } else {
-                $this->flashMessenger()->addErrorMessage(_('Form with errors!'));
+                $this->flashMessenger()->addErrorMessage(_('The account could not be created. Please, try again.'));
             }
         }
 
+        $form->get('submit-btn')
+            ->setValue(_('Sign me up'))
+            ->setAttribute('class', 'btn btn-lg btn-block btn-primary');
         $form->prepare();
         $viewModel = new ViewModel([
             'form' => $form,
@@ -296,17 +318,17 @@ class AuthController extends AbstractActionController
         }
 
         if (!$identity->isConfirmedEmail()) {
-            $identity->setToken(sha1(uniqid(mt_rand(), true))); // change immediately taken to prevent multiple requests to db
+            $identity->generateToken(); // change immediately taken to prevent multiple requests to db
             $identity->setSignAllowed(true);
             $identity->setConfirmedEmail(true);
             $this->entityManager->flush();
             $this->authenticationService->getStorage()->write($identity);
-            $this->flashMessenger()->addSuccessMessage(_('Email confirmed.'));
+            $this->flashMessenger()->addSuccessMessage(_('The email has been confirmed.'));
             return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         } else {
-            $identity->setToken(sha1(uniqid(mt_rand(), true))); // change immediately taken to prevent multiple requests to db
+            $identity->generateToken(); // change immediately taken to prevent multiple requests to db
             $this->entityManager->flush();
-            $this->flashMessenger()->addInfoMessage(_('Email already verified. Please login!'));
+            $this->flashMessenger()->addInfoMessage(_('Email already verified. Please, sign in.'));
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
         }
     }
@@ -331,12 +353,12 @@ class AuthController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                /** @var UserInterface $identity */
                 $identity = $identityRepo->findOneBy([$this->options['emailProperty'] => $form->get('email')->getValue()]);
                 if (is_null($identity)) {
                     $this->flashMessenger()->addErrorMessage('Email not found');
                 } else {
-                    $identity->setToken(sha1(uniqid(mt_rand(), true)));
-
+                    $identity->generateToken();
                     $this->entityManager->flush();
 
                     $fullLink = $this->url()->fromRoute(
@@ -357,7 +379,7 @@ class AuthController extends AbstractActionController
                     return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
                 }
             } else {
-                $this->flashMessenger()->addErrorMessage(_('Form with errors!'));
+                $this->flashMessenger()->addErrorMessage(_('The action could not be completed. Please, try again.'));
             }
         }
 
@@ -403,6 +425,7 @@ class AuthController extends AbstractActionController
         }
 
         $form = new PasswordChangeForm();
+        $form->getInputFilter()->get('password-old')->setRequired(false);
         $this->routes['password-recover']['params']['token'] = $token;
         $form->setAttribute('action', $this->url()->fromRoute($this->routes['password-recover']['name'], $this->routes['password-recover']['params'], $this->routes['password-recover']['options'], $this->routes['password-recover']['reuseMatchedParams']));
 
@@ -412,22 +435,23 @@ class AuthController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $identity, 'type' => $this->options['credentialType']]);
-                $passwordNew = sha1(sha1($data['password']));
-
-                $identity->setToken(sha1(uniqid(mt_rand(), true)));
-                $credential->setValue($passwordNew);
+                /** @var CredentialInterface $credential */
+                $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $identity, $this->options['credentialTypeProperty'] => $this->options['credentialType']]);
+                $identity->generateToken();
+                $credential->setValue($data['password-new']);
+                $credential->hashValue();
 
                 $this->entityManager->flush();
 
-                $this->flashMessenger()->addSuccessMessage(_('Your password has been changed successfully!'));
+                $this->flashMessenger()->addSuccessMessage(_('Your password has been changed. Please, sign in.'));
 
                 return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
             } else {
-                $this->flashMessenger()->addErrorMessage(_('Form with errors!'));
+                $this->flashMessenger()->addErrorMessage(_('The action could not be completed. Please, try again.'));
             }
         }
 
+        $form->get('submit-btn')->setAttribute('class', 'btn btn-lg btn-block btn-primary');
         $form->prepare();
         $viewModel = new ViewModel([
             'form' => $form,
@@ -438,5 +462,29 @@ class AuthController extends AbstractActionController
         $this->layout($this->layoutView);
 
         return $viewModel;
+    }
+
+    /**
+     * Verify redirect
+     * @param string $redirectUrl
+     * @param array $options
+     * @return array
+     * @throws \Exception
+     */
+    protected function verifyRedirect($redirectUrl, $options)
+    {
+        if (strlen($redirectUrl) > 2048) {
+            throw new \Exception('Too long redirectUrl argument passed');
+        }
+        if ($redirectUrl !== '') {
+            // The below check is to prevent possible redirect attack
+            // (if someone tries to redirect user to another domain).
+            $uri = new Uri($redirectUrl);
+            if (!$uri->isValid() || $uri->getHost() !== null) {
+                throw new \Exception('Incorrect redirect URL: ' . $redirectUrl);
+            }
+            $options = ArrayUtils::merge($options, ['query' => ['redirect' => $redirectUrl]]);
+        }
+        return $options;
     }
 }

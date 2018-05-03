@@ -5,6 +5,8 @@
  */
 
 namespace Zetta\ZendAuthentication\Entity;
+use Jenssegers\Date\Date;
+use Zetta\ZendAuthentication\Entity\Enum\Gender;
 
 /**
  * Interface UserInterface
@@ -80,6 +82,46 @@ interface UserInterface
     public function setAvatar($avatar, $overwrite = true, $dir = 'upload');
 
     /**
+     * Get the User gender
+     * @return Gender
+     */
+    public function getGender();
+
+    /**
+     * Set the User gender
+     * @param Gender $gender
+     * @return UserInterface
+     */
+    public function setGender($gender);
+
+    /**
+     * Get the User birthday
+     * @return Date
+     */
+    public function getBirthday();
+
+    /**
+     * Set the User birthday
+     * @param Date $birthday
+     * @return UserInterface
+     */
+    public function setBirthday($birthday);
+
+    /**
+     * Get the User bio
+     * @param bool $html
+     * @return string
+     */
+    public function getBio($html);
+
+    /**
+     * Set the User bio
+     * @param string $bio
+     * @return UserInterface
+     */
+    public function setBio($bio);
+
+    /**
      * Get the User token
      * @return string
      */
@@ -91,6 +133,12 @@ interface UserInterface
      * @return UserInterface
      */
     public function setToken($token);
+
+    /**
+     * Generate the User token
+     * @return UserInterface
+     */
+    public function generateToken();
 
     /**
      * Get the User confirmedEmail

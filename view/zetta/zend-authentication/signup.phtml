@@ -14,23 +14,32 @@ $this->headTitle($title);
         <div class="card-body">
             <?php echo $this->zettaFlashMessenger(); ?>
 
-            <?php echo $this->form()->openTag($form); ?>
+            <?php
+            echo $this->form()->openTag($form);
+            $userFieldset = $form->get('signup');
+            ?>
                 <span class="splash-title pb-4"><?php echo $title ?></span>
 
-                <?php echo $this->formHidden($form->get('id')); ?>
+                <?php echo $this->formHidden($userFieldset->get('id')); ?>
 
-                <?php echo $this->zettaFormRow($form->get('username')); ?>
+                <?php echo $this->zettaFormRow($userFieldset->get('name')); ?>
 
-                <?php echo $this->zettaFormRow($form->get('email')); ?>
+                <?php echo $this->zettaFormRow($userFieldset->get('email')); ?>
 
-                <div class="form-group toogle-password<?php echo $form->get('password')->getMessages() !== [] ? ' has-error': ''; ?>">
-                    <?php echo $this->formLabel($form->get('password')); ?>
-                    <?php echo $this->formElement($form->get('password')); ?>
+                <div class="form-group toogle-password">
+                    <?php echo $this->formLabel($userFieldset->get('password')); ?>
+                    <?php
+                    if (count($userFieldset->get('password')->getMessages()) !== 0) {
+                        $userFieldset->get('password')->setAttribute('class', $userFieldset->get('password')->getAttribute('class') . ' is-invalid');
+                    }
+                    echo $this->formElement($userFieldset->get('password')); ?>
                     <i class="fa btn-toogle-password" onclick="togglePassword('#signup-password'); return false;"></i>
-                    <?php echo $this->formElementErrors($form->get('password')); ?>
+                    <?php echo $this->formElementErrors($userFieldset->get('password'), ['class' => 'invalid-feedback']); ?>
                 </div>
 
-                <?php echo $this->zettaFormRow($form->get('accepted-terms'), 'append'); ?>
+                <?php echo $this->zettaFormRow($userFieldset->get('genre'), 'prepend'); ?>
+
+                <?php //echo $this->zettaFormRow($form->get('accepted-terms'), 'append'); ?>
 
                 <div class="form-group">
                     <?php echo $this->formRow($form->get('submit-btn')); ?>

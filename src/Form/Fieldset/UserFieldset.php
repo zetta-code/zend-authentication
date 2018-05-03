@@ -7,74 +7,118 @@
 namespace Zetta\ZendAuthentication\Form\Fieldset;
 
 use Doctrine\ORM\EntityManagerInterface;
+use DoctrineModule\Form\Element\ObjectSelect;
+use Zend\Form\Element;
 use Zend\Form\Fieldset;
-use Zend\Hydrator\ClassMethods;
+use Zetta\DoctrineUtil\Hydrator\DoctrineObject;
+use Zetta\ZendAuthentication\Entity\Enum\Gender;
+use Zetta\ZendBootstrap\Hydrator\Strategy\DateStrategy;
 
 class UserFieldset extends Fieldset
 {
     /**
      * UserFieldset constructor.
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface $entityManager
      * @param string $name
      * @param array $options
      */
-    public function __construct(EntityManagerInterface $em, $name = 'user', $options = [])
+    public function __construct(EntityManagerInterface $entityManager, $name = 'user', $options = [])
     {
         parent::__construct($name, $options);
 
-        $hidrator = new ClassMethods(false);
+        if (isset($options['identityClass'])) {
+            $identityClass = $options['identityClass'];
+        } else {
+            $identityClass = '';
+        }
+        if (isset($options['roleClass'])) {
+            $roleClass = $options['roleClass'];
+        } else {
+            $roleClass = '';
+        }
+
+        $hidrator = new DoctrineObject($entityManager);
+        $hidrator->addStrategy('birthday', new DateStrategy());
         $this->setHydrator($hidrator);
+        $this->setObject(new $identityClass());
 
         $this->add([
             'name' => 'id',
-            'type' => 'hidden',
+            'type' => Element\Hidden::class,
+        ]);
+
+        $this->add([
+            'name' => 'role',
+            'type' => ObjectSelect::class,
+            'attributes' => [
+                'class' => 'form-control selectpicker',
+                'data-container' => 'body',
+                'data-live-search' => 'true',
+                'required' => false,
+            ],
+            'options' => [
+                'label' => _('Role'),
+                'label_attributes' => ['class' => 'control-label'],
+                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'object_manager' => $entityManager,
+                'target_class' => $roleClass,
+                'property' => 'name',
+                'is_method' => true,
+                'empty_option' => _('Select'),
+                'find_method' => [
+                    'name' => 'findBy',
+                    'params' => [
+                        'criteria' => [
+                            'active' => true
+                        ],
+                        'orderBy' => ['name' => 'ASC'],
+                    ],
+                ],
+            ],
         ]);
 
         $this->add([
             'name' => 'name',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Name'),
             ],
             'options' => [
                 'label' => _('Name'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 
         $this->add([
             'name' => 'username',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Username'),
             ],
             'options' => [
                 'label' => _('Username'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 
         $this->add([
             'name' => 'email',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Email'),
             ],
             'options' => [
                 'label' => _('Email'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 
         $this->add([
             'name' => 'password',
-            'type' => 'password',
+            'type' => Element\Password::class,
             'attributes' => [
                 'id' => $name . '-password',
                 'class' => 'form-control',
@@ -82,22 +126,78 @@ class UserFieldset extends Fieldset
             ],
             'options' => [
                 'label' => 'Password',
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 
         $this->add([
             'name' => 'avatar',
-            'type' => 'file',
+            'type' => Element\File::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Avatar'),
             ],
             'options' => [
                 'label' => _('Avatar'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'gender',
+            'type' => Element\Radio::class,
+            'attributes' => [
+                'class' => 'custom-control-input',
+                'placeholder' => _('Gender'),
+            ],
+            'options' => [
+                'label' => _('Gender'),
+                'label_attributes' => [
+                    'class' => 'custom-control-label'
+                ],
+                'div' => ['class' => 'custom-control custom-radio custom-control-inline'],
+                'value_options' => [
+                    [
+                        'value' => Gender::FEMALE,
+                        'label' => _('Female'),
+                        'attributes' => [
+                            'id' => $name . '-gender-' . Gender::FEMALE,
+                        ],
+                    ],
+                    [
+                        'value' => Gender::MALE,
+                        'label' => _('Male'),
+                        'attributes' => [
+                            'id' => $name . '-gender-' . Gender::MALE,
+                        ],
+                    ],
+                ]
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'birthday',
+            'type' => Element\Text::class,
+            'attributes' => [
+                'class' => 'form-control mask-date',
+                'placeholder' => _('Birthday'),
+            ],
+            'options' => [
+                'label' => _('Birthday'),
+                'div' => ['class' => 'form-group'],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'bio',
+            'type' => Element\Textarea::class,
+            'attributes' => [
+                'class' => 'form-control',
+                'placeholder' => _('Bio'),
+            ],
+            'options' => [
+                'label' => _('Bio'),
+                'div' => ['class' => 'form-group'],
             ],
         ]);
     }

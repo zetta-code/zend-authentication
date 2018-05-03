@@ -11,25 +11,29 @@ use Zend\Form\Form;
 use Zetta\ZendAuthentication\Form\Fieldset\UserFieldset;
 use Zetta\ZendAuthentication\InputFilter\UserFilter;
 
+/**
+ * Class UserForm
+ * @method UserFilter getInputFilter()
+ */
 class UserForm extends Form
 {
-
     /**
      * UserForm constructor.
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface $entityManager
      * @param string $name
      * @param array $options
      */
-    public function __construct(EntityManagerInterface $em, $name = 'user', $options = [])
+    public function __construct(EntityManagerInterface $entityManager, $name = 'user', $options = [])
     {
         parent::__construct($name, $options);
         $this->setAttribute('method', 'post');
         $this->setAttribute('role', 'form');
-        $inputFilter = new UserFilter($em, $options);
+        $this->setAttribute('novalidate', true);
+        $inputFilter = new UserFilter($entityManager, $name, $options);
         $inputFilter->init();
         $this->setInputFilter($inputFilter);
 
-        $userFieldser = new UserFieldset($em);
+        $userFieldser = new UserFieldset($entityManager, $name, $options);
         $userFieldser->setUseAsBaseFieldset(true);
 
         $this->add($userFieldser);
