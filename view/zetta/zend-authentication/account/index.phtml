@@ -17,6 +17,12 @@
                         <div class="title">Email</div>
                         <div class="counter"><?php echo $user->getEmail(); ?></div>
                     </div>
+                    <?php if ($user->getBio() !== null): ?>
+                        <div class="col-12">
+                            <div class="title">Bio</div>
+                            <div class="counter"><?php echo $user->getBio(true); ?></div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -36,6 +42,8 @@
                 ?>
                     <?php echo $this->zettaFormRow($userFieldset->get('name')); ?>
 
+                    <?php echo $this->zettaFormRow($userFieldset->get('username')); ?>
+
                     <?php echo $this->zettaFormRow($userFieldset->get('email')); ?>
 
                     <div class="form-group">
@@ -49,22 +57,19 @@
                     <div class="form-group">
                         <label><?php echo $this->translate('Avatar'); ?></label>
 
-                        <div class="row">
-                            <div class="col-md-5">
-                                <img class="mb-3" id='avatar-preview' width="128" height="128" src="<?php echo $this->basePath($user->getAvatar()); ?>" alt="<?php echo $this->translate('Avatar'); ?>">
-                            </div>
-                            <div class="col-md-7">
-                                <input id="avatar-upload" type="file" name="<?php echo $userFieldset->get('avatar')->getName(); ?>" style="display: none">
-                                <label id="avatar-label" class="btn btn-outline-secondary" for="avatar-upload"><?php echo $this->translate('Choose the file'); ?></label>
-                                </input>
-                            </div>
+                        <div>
+                            <img class="mb-3" id='avatar-preview' width="128" height="128" src="<?php echo $this->basePath($user->getAvatar()); ?>" alt="<?php echo $this->translate('Avatar'); ?>">
+                            <input id="avatar-upload" type="file" name="<?php echo $userFieldset->get('avatar')->getName(); ?>" style="display: none">
+                            <label id="avatar-label" class="btn btn-outline-secondary" for="avatar-upload"><?php echo $this->translate('Choose the file'); ?></label>
                         </div>
                         <?php echo $this->formElementErrors($userFieldset->get('avatar')); ?>
                     </div>
 
-                    <?php echo $this->zettaFormRow($userFieldset->get('genre')); ?>
+                    <?php echo $this->zettaFormRow($userFieldset->get('gender')); ?>
 
                     <?php echo $this->zettaFormRow($userFieldset->get('birthday')); ?>
+
+                    <?php echo $this->zettaFormRow($userFieldset->get('bio')); ?>
 
                     <div class="form-group">
                         <?php echo $this->formRow($form->get('submit-btn')); ?>

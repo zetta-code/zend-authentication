@@ -40,7 +40,6 @@ tags/
 phpunit.xml
 phpcs.xml
 
-
 # Legacy ZF1
 demos/
 extras/documentation

@@ -37,13 +37,14 @@ $this->headTitle($title);
                     <?php echo $this->formElementErrors($userFieldset->get('password'), ['class' => 'invalid-feedback']); ?>
                 </div>
 
-                <?php echo $this->zettaFormRow($userFieldset->get('genre'), 'prepend'); ?>
-
-                <?php //echo $this->zettaFormRow($form->get('accepted-terms'), 'append'); ?>
-
                 <div class="form-group">
                     <?php echo $this->formRow($form->get('submit-btn')); ?>
                 </div>
+
+                <p class="text-secondary">
+                    Ao criar uma conta, você concorda com nossos <a href="/legal" target="_blank">Termos de Serviço</a>
+                    e <a href="/privacy" target="_blank">Política de Privacidade</a>.
+                </p>
             <?php echo $this->form()->closeTag(); ?>
         </div>
     </div>

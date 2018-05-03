@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-authentication for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendAuthentication\Controller;
@@ -232,12 +232,12 @@ class AuthController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $data = $form->getData();
+                $data = $form->getData(UserForm::VALUES_AS_ARRAY);
                 $credentialClass = $this->options['credentialClass'];
                 /** @var CredentialInterface $credential */
                 $credential = new $credentialClass();
                 $credential->setType($this->options['credentialType']);
-                $credential->setValue($data['password']);
+                $credential->setValue($data['signup']['password']);
                 $credential->hashValue();
                 $credential->setUser($user);
 
@@ -246,7 +246,7 @@ class AuthController extends AbstractActionController
                 $user->role($role);
 
                 $user->setAvatar($this->thumbnail()->getDefaultThumbnailPath());
-                $user->setSignAllowed($this->config['default']['role']);
+                $user->setSignAllowed($this->config['default']['signAllowed']);
                 $user->generateToken();
 
                 $this->entityManager->persist($user);

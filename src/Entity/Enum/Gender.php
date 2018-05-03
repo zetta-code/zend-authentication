@@ -1,18 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: thiag
- * Date: 03/05/2018
- * Time: 10:15
+ * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendAuthentication\Entity\Enum;
 
-
-class Gender extends \SplEnum
+class Gender
 {
-    const __default = self::FEMALE;
-
     const FEMALE = 1;
     const MALE = 2;
 }
