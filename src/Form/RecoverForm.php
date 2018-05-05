@@ -46,6 +46,7 @@ class RecoverForm extends Form
             'attributes' => [
                 'class' => 'btn btn-lg btn-block btn-primary',
                 'value' => _('Recover password'),
+                'onclick' => 'return checkReCaptcha();',
                 'id' => $name . '-submit',
             ],
         ]);
