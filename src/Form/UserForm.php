@@ -7,6 +7,7 @@
 namespace Zetta\ZendAuthentication\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zetta\ZendAuthentication\Form\Fieldset\UserFieldset;
 use Zetta\ZendAuthentication\InputFilter\UserFilter;
@@ -40,7 +41,7 @@ class UserForm extends Form
 
         $this->add([
             'name' => 'submit-btn',
-            'type' => 'Submit',
+            'type' => Element\Submit::class,
             'attributes' => [
                 'class' => 'btn btn-primary',
                 'value' => _('Submit'),

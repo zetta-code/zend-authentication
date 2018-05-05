@@ -6,6 +6,7 @@
 
 namespace Zetta\ZendAuthentication\Form;
 
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zetta\ZendAuthentication\InputFilter\SigninFilter;
 
@@ -25,7 +26,7 @@ class SigninForm extends Form
 
         $this->add([
             'name' => 'username',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Email'),
@@ -39,7 +40,7 @@ class SigninForm extends Form
 
         $this->add([
             'name' => 'password',
-            'type' => 'password',
+            'type' => Element\Password::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Password'),
@@ -53,7 +54,7 @@ class SigninForm extends Form
 
         $this->add([
             'name' => 'remember-me',
-            'type' => 'checkbox',
+            'type' => Element\Checkbox::class,
             'attributes' => [
                 'class' => 'custom-control-input'
             ],
@@ -66,7 +67,7 @@ class SigninForm extends Form
 
         $this->add([
             'name' => 'submit-btn',
-            'type' => 'submit',
+            'type' => Element\Submit::class,
             'attributes' => [
                 'class' => 'btn btn-lg btn-block btn-primary',
                 'value' => _('Sign me in'),

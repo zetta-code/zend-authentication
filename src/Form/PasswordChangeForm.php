@@ -6,6 +6,7 @@
 
 namespace Zetta\ZendAuthentication\Form;
 
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zetta\ZendAuthentication\InputFilter\PasswordChangeFilter;
 
@@ -26,7 +27,7 @@ class PasswordChangeForm extends Form
 
         $this->add([
             'name' => 'password-old',
-            'type' => 'password',
+            'type' => Element\Password::class,
             'attributes' => [
                 'id' => $name . '-password-old',
                 'class' => 'form-control',
@@ -41,7 +42,7 @@ class PasswordChangeForm extends Form
 
         $this->add([
             'name' => 'password-new',
-            'type' => 'password',
+            'type' => Element\Password::class,
             'attributes' => [
                 'id' => $name . '-password-new',
                 'class' => 'form-control',
@@ -56,7 +57,7 @@ class PasswordChangeForm extends Form
 
         $this->add([
             'name' => 'submit-btn',
-            'type' => 'Submit',
+            'type' => Element\Submit::class,
             'attributes' => [
                 'class' => 'btn btn-primary',
                 'value' => _('Change Password'),

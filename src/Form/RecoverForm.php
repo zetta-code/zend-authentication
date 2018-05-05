@@ -6,6 +6,7 @@
 
 namespace Zetta\ZendAuthentication\Form;
 
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\Hydrator\ClassMethods;
 use Zetta\ZendAuthentication\InputFilter\RecoverFilter;
@@ -27,25 +28,41 @@ class RecoverForm extends Form
 
         $this->add([
             'name' => 'email',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => _('Email'),
             ],
             'options' => [
                 'label' => 'Email',
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 
+
         $this->add([
             'name' => 'submit-btn',
-            'type' => 'submit',
+            'type' => Element\Submit::class,
             'attributes' => [
                 'class' => 'btn btn-lg btn-block btn-primary',
                 'value' => _('Recover password'),
                 'id' => $name . '-submit',
+            ],
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        $this->add([
+            'type' => 'recaptcha',
+            'name' => 'captcha',
+            'options' => [
+                'label' => _('Please verify you are human'),
             ],
         ]);
     }

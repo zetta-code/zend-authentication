@@ -22,9 +22,10 @@ class AuthControllerFactory implements FactoryInterface
         $entityManager = $container->get(EntityManager::class);
         $authenticationService = $container->get(AuthenticationService::class);
         $translator = $container->get(Translator::class);
+        $formManager = $container->get('FormElementManager');
         $config = $container->get('config');
         $config = $config['zend_authentication'];
 
-        return new $requestedName($entityManager, $authenticationService, $translator, $config);
+        return new $requestedName($entityManager, $authenticationService, $translator, $formManager, $config);
     }
 }

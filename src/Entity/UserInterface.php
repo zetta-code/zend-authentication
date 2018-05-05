@@ -122,6 +122,19 @@ interface UserInterface
     public function setBio($bio);
 
     /**
+     * Get the User confirmedEmail
+     * @return bool
+     */
+    public function isConfirmedEmail();
+
+    /**
+     * Set the User confirmedEmail
+     * @param bool $confirmedEmail
+     * @return UserInterface
+     */
+    public function setConfirmedEmail($confirmedEmail);
+
+    /**
      * Get the User token
      * @return string
      */
@@ -136,22 +149,22 @@ interface UserInterface
 
     /**
      * Generate the User token
+     * @param bool $tokenDate
      * @return UserInterface
      */
-    public function generateToken();
+    public function generateToken($tokenDate = true);
 
     /**
-     * Get the User confirmedEmail
-     * @return bool
-     */
-    public function isConfirmedEmail();
-
-    /**
-     * Set the User confirmedEmail
-     * @param bool $confirmedEmail
+     * Unset the User token
      * @return UserInterface
      */
-    public function setConfirmedEmail($confirmedEmail);
+    public function unsetToken();
+
+    /**
+     * Get the User tokenDate
+     * @return \DateTime
+     */
+    public function getTokenDate();
 
     /**
      * Get the User signAllowed

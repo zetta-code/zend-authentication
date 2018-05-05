@@ -19,6 +19,8 @@ $this->headTitle($title);
 
                 <?php echo $this->zettaFormRow($form->get('email')); ?>
 
+                <?php echo $this->zettaFormRow($form->get('captcha')); ?>
+
                 <p class="pt-1 pb-4 small">
                     <?php echo $this->translate('Don\'t remember your email?'); ?>
                     <a href="mailto:admin@z.com"><?php echo $this->translate('Contact Support'); ?></a>.

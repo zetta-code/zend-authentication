@@ -45,6 +45,12 @@ class AuthController extends AbstractActionController
     protected $translator;
 
     /**
+     * @var AbstractPluginManager
+     */
+    protected $formManager;
+
+
+    /**
      * @var array
      */
     protected $config;
@@ -76,11 +82,12 @@ class AuthController extends AbstractActionController
      * @param TranslatorInterface $translator
      * @param array $config
      */
-    public function __construct(EntityManager $entityManager, AuthenticationService $authenticationService, TranslatorInterface $translator, array $config)
+    public function __construct(EntityManager $entityManager, AuthenticationService $authenticationService, TranslatorInterface $translator, $formManager, array $config)
     {
         $this->entityManager = $entityManager;
         $this->authenticationService = $authenticationService;
         $this->translator = $translator;
+        $this->formManager = $formManager;
         $this->setConfig($config);
     }
 
@@ -170,14 +177,11 @@ class AuthController extends AbstractActionController
                 $authResult = $this->authenticationService->authenticate();
 
                 if ($authResult->isValid()) {
-                    $identity = $authResult->getIdentity();
-
                     /** @var Session $authStorage */
                     $authStorage = $this->authenticationService->getStorage();
                     if ($data['remember-me'] === 1) {
                         $authStorage->setRememberMe(true);
                     }
-                    $authStorage->write($identity);
 
                     $this->flashMessenger()->addSuccessMessage(_('You\'re conected!'));
 
@@ -247,7 +251,7 @@ class AuthController extends AbstractActionController
 
                 $user->setAvatar($this->thumbnail()->getDefaultThumbnailPath());
                 $user->setSignAllowed($this->config['default']['signAllowed']);
-                $user->generateToken();
+                $user->generateToken(false);
 
                 $this->entityManager->persist($user);
                 $this->entityManager->persist($credential);
@@ -298,27 +302,29 @@ class AuthController extends AbstractActionController
     public function confirmEmailAction()
     {
         $identityRepo = $this->entityManager->getRepository($this->options['identityClass']);
-
         $token = $this->params()->fromRoute('token', 0);
 
         if ($this->identity()) {
-            $this->authenticationService->getStorage()->forgetMe();
-            $this->authenticationService->clearIdentity();
+            $this->authenticationService->getStorage()->expireSessionCookie();
         }
 
-        $qb = $identityRepo->createQueryBuilder('i');
-        $qb->where('i.token = :token');
+        $qb = $identityRepo->createQueryBuilder('identity');
+        $qb->where('identity.token = :token');
         $qb->setParameter('token', $token);
         /** @var UserInterface $identity */
         $identity = $qb->getQuery()->getOneOrNullResult();
 
-        if ($identity == null) {
+        if ($identity === null || $identity->getTokenDate() !== null) {
+            if ($identity !== null) {
+                $identity->unsetToken();
+                $this->entityManager->flush();
+            }
             $this->flashMessenger()->addErrorMessage(_('Token invalid or you already confirmed this link.'));
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
         }
 
         if (!$identity->isConfirmedEmail()) {
-            $identity->generateToken(); // change immediately taken to prevent multiple requests to db
+            $identity->unsetToken(); // unset immediately taken to prevent multiple requests to db
             $identity->setSignAllowed(true);
             $identity->setConfirmedEmail(true);
             $this->entityManager->flush();
@@ -326,7 +332,7 @@ class AuthController extends AbstractActionController
             $this->flashMessenger()->addSuccessMessage(_('The email has been confirmed.'));
             return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         } else {
-            $identity->generateToken(); // change immediately taken to prevent multiple requests to db
+            $identity->unsetToken(); // unset immediately taken to prevent multiple requests to db
             $this->entityManager->flush();
             $this->flashMessenger()->addInfoMessage(_('Email already verified. Please, sign in.'));
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
@@ -345,7 +351,7 @@ class AuthController extends AbstractActionController
             return $this->redirect()->toRoute($this->routes['redirect']['name'], $this->routes['redirect']['params'], $this->routes['redirect']['options'], $this->routes['redirect']['reuseMatchedParams']);
         }
 
-        $form = new RecoverForm();
+        $form = $this->formManager->get(RecoverForm::class);
         $form->setAttribute('action', $this->url()->fromRoute($this->routes['recover']['name'], $this->routes['recover']['params'], $this->routes['recover']['options'], $this->routes['recover']['reuseMatchedParams']));
 
         $request = $this->getRequest();
@@ -405,21 +411,25 @@ class AuthController extends AbstractActionController
     {
         $identityRepo = $this->entityManager->getRepository($this->options['identityClass']);
         $credentialRepo = $this->entityManager->getRepository($this->options['credentialClass']);
-
         $token = $this->params()->fromRoute('token', 0);
 
         if ($this->identity()) {
-            $this->authenticationService->getStorage()->forgetMe();
-            $this->authenticationService->clearIdentity();
+            $this->authenticationService->getStorage()->expireSessionCookie();
         }
 
-        $qb = $identityRepo->createQueryBuilder('i');
-        $qb->where('i.token = :token');
+        $qb = $identityRepo->createQueryBuilder('identity');
+        $qb->where('identity.token = :token');
         $qb->setParameter('token', $token);
         /** @var UserInterface $identity */
         $identity = $qb->getQuery()->getOneOrNullResult();
 
-        if ($identity == null) {
+        $now = new \DateTime();
+        if ($identity === null || $identity->getTokenDate() === null
+            || $now->getTimestamp() - $identity->getTokenDate()->getTimestamp() > 86400) {
+            if ($identity !== null) {
+                $identity->unsetToken();
+                $this->entityManager->flush();
+            }
             $this->flashMessenger()->addErrorMessage(_('Token invalid or you already confirmed this link.'));
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
         }
@@ -437,14 +447,11 @@ class AuthController extends AbstractActionController
                 $data = $form->getData();
                 /** @var CredentialInterface $credential */
                 $credential = $credentialRepo->findOneBy([$this->options['credentialIdentityProperty'] => $identity, $this->options['credentialTypeProperty'] => $this->options['credentialType']]);
-                $identity->generateToken();
+                $identity->unsetToken();
                 $credential->setValue($data['password-new']);
                 $credential->hashValue();
-
                 $this->entityManager->flush();
-
                 $this->flashMessenger()->addSuccessMessage(_('Your password has been changed. Please, sign in.'));
-
                 return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
             } else {
                 $this->flashMessenger()->addErrorMessage(_('The action could not be completed. Please, try again.'));
