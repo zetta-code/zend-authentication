@@ -22,7 +22,7 @@ class IsAllowedFactory implements FactoryInterface
         $auth = $container->get(AuthenticationService::class);
         $acl = $container->get(Acl::class);
 
-        $role = $auth->hasIdentity() ? new GenericRole($auth->getIdentity()->getRoleName()) : $acl->getDefaultRole();
+        $role = $auth->hasIdentity() ? new GenericRole($auth->getIdentity()->role()) : $acl->getDefaultRole();
 
         return new $requestedName($acl, $role);
     }

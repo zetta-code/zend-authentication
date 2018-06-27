@@ -461,6 +461,7 @@ class AuthController extends AbstractActionController
         $form->get('submit-btn')->setAttribute('class', 'btn btn-lg btn-block btn-primary');
         $form->prepare();
         $viewModel = new ViewModel([
+            'user' => $identity,
             'form' => $form,
             'routes' => $this->routes
         ]);
