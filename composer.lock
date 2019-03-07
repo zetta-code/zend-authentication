@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee00d2e51131bac7649423fc5bae52e4",
+    "content-hash": "9dd4fc81e7ba492720d4c5e064a41be3",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -3655,16 +3655,16 @@
         },
         {
             "name": "zetta-code/doctrine-util",
-            "version": "0.0.3",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zetta-code/doctrine-util.git",
-                "reference": "bc835f00dfe25701e305ac0c42f4bbfd4067e877"
+                "reference": "012a30bf0b020b938d23aede02a95240d84d85f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zetta-code/doctrine-util/zipball/bc835f00dfe25701e305ac0c42f4bbfd4067e877",
-                "reference": "bc835f00dfe25701e305ac0c42f4bbfd4067e877",
+                "url": "https://api.github.com/repos/zetta-code/doctrine-util/zipball/012a30bf0b020b938d23aede02a95240d84d85f5",
+                "reference": "012a30bf0b020b938d23aede02a95240d84d85f5",
                 "shasum": ""
             },
             "require": {
@@ -3705,24 +3705,26 @@
                 "util",
                 "zf3"
             ],
-            "time": "2018-06-27T17:19:38+00:00"
+            "time": "2019-03-07T14:30:32+00:00"
         },
         {
             "name": "zetta-code/zend-bootstrap",
-            "version": "0.0.4",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zetta-code/zend-bootstrap.git",
-                "reference": "959d4581bf241f6b767315c941d4ded884799afe"
+                "reference": "89a85da394c430c9962934bc7faf155f90021a3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zetta-code/zend-bootstrap/zipball/959d4581bf241f6b767315c941d4ded884799afe",
-                "reference": "959d4581bf241f6b767315c941d4ded884799afe",
+                "url": "https://api.github.com/repos/zetta-code/zend-bootstrap/zipball/89a85da394c430c9962934bc7faf155f90021a3f",
+                "reference": "89a85da394c430c9962934bc7faf155f90021a3f",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0",
+                "ext-gettext": "^7.2",
+                "ext-intl": "^1.1",
+                "php": "^7.2",
                 "zendframework/zend-stdlib": "^3.0"
             },
             "require-dev": {
@@ -3766,7 +3768,7 @@
                 "bootstrap",
                 "zf3"
             ],
-            "time": "2018-05-04T20:15:43+00:00"
+            "time": "2019-03-07T19:06:42+00:00"
         }
     ],
     "packages-dev": [

@@ -31,8 +31,8 @@
     "zendframework/zend-session": "^2.7",
     "zendframework/zend-permissions-acl": "^2.6",
     "zendframework/zendservice-recaptcha": "^3.0",
-    "zetta-code/zend-bootstrap": "^0.0.4",
-    "zetta-code/doctrine-util": "^0.0.3"
+    "zetta-code/zend-bootstrap": "^0.0.5",
+    "zetta-code/doctrine-util": "^0.0.4"
   },
   "require-dev": {
     "zendframework/zend-mvc-i18n": "^1.0"
