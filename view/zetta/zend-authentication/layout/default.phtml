@@ -1,41 +1,7 @@
 <?php echo $this->doctype(); ?>
-
 <html lang="en-US">
     <head>
-        <meta charset="utf-8">
-        <?php echo $this->headMeta()
-            ->prependName('keywords', 'zetta code, responsive layout')
-            ->prependName('description', 'ZF Skeleton App')
-            ->prependName('author', 'Zetta Code')
-            ->prependName('viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no')
-            ->prependHttpEquiv('X-UA-Compatible', 'IE=edge'); ?>
-
-        <?php echo $this->headTitle($this->translate('ZF Skeleton App'))->setSeparator(' - ')->setAutoEscape(false) ?>
-
-        <!-- Le styles -->
-        <?php echo $this->headLink()
-            ->prependStylesheet($this->basePath('assets/zetta/css/zend-authentication.css'))
-            ->prependStylesheet($this->basePath('assets/animate.min.css'))
-            ->prependStylesheet($this->basePath('assets/font-awesome/css/font-awesome.min.css'))
-            ->prependStylesheet($this->basePath('css/beagle.css'))
-            ->prependStylesheet($this->basePath('assets/bootstrap/css/bootstrap.min.css')); ?>
-
-        <!-- Le inline styles -->
-        <?php echo $this->headStyle(); ?>
-
-        <!-- Fav and touch icons -->
-        <link href="<?php echo $this->basePath('img/favicon.ico'); ?>" rel="shortcut icon" type="image/vnd.microsoft.icon">
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script type="text/javascript" src="<?php echo $this->basePath('js/html5shiv.min.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo $this->basePath('js/respond.min.js'); ?>"></script>
-        <![endif]-->
-
-        <!-- Start Scripts -->
-        <?php echo $this->headScript(); ?>
-        <!--  End Scripts-->
+        <?php echo $this->partial('layout/default/_head'); ?>
     </head>
     <body class="splash-screen">
         <!-- Start Content-->
@@ -48,17 +14,6 @@
         </div>
         <!-- End Content-->
 
-        <!-- Javascripts -->
-        <!-- Important javascript libs(put in all pages) -->
-        <script type="text/javascript" src="<?php echo $this->basePath('assets/jquery/jquery-3.2.1.min.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo $this->basePath('assets/jquery/jquery.mask.min.js'); ?>"></script>
-        <script type="text/javascript">var basePath = '<?php echo $this->basePath(); ?>';</script>
-
-        <!-- Start Inline Scripts-->
-        <?php echo $this->inlineScript()
-            ->prependFile($this->basePath('js/default.js'))
-            ->prependFile($this->basePath('assets/bootstrap/js/bootstrap.min.js'))
-            ->prependFile($this->basePath('assets/popper.min.js')); ?>
-        <!-- End Inline Scripts-->
+        <?php echo $this->partial('layout/default/_scripts'); ?>
     </body>
 </html>

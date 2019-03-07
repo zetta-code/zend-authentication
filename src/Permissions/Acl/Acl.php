@@ -32,7 +32,7 @@ class Acl extends ZendAcl
         $roles = $config['roles'];
         $resources = $config['resources'];
         if (isset($config['defaultRole'])) {
-            $this->defaultRole = $config['defaultRole'];
+            $this->defaultRole = (string) $config['defaultRole'];
         }
 
         if (!isset($roles[$this->defaultRole])) {

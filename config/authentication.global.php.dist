@@ -1,5 +1,7 @@
 <?php
 
+use Application\Entity\Role;
+
 return [
     'zend_authentication' => [
         'layout' => 'zetta/zend-authentication/layout/default',
@@ -78,49 +80,57 @@ return [
             ],
         ],
         'options' => [
-            'identityClass' => Zetta\ZendAuthentication\Entity\UserInterface::class,
-            'credentialClass' => Zetta\ZendAuthentication\Entity\CredentialInterface::class,
-            'roleClass' => Zetta\ZendAuthentication\Entity\RoleInterface::class,
+            'identityClass' => Application\Entity\User::class,
+            'credentialClass' => Application\Entity\Credential::class,
+            'roleClass' => Role::class,
             'identityProperty' => 'username',
             'emailProperty' => 'email',
             'credentialProperty' => 'value',
             'credentialIdentityProperty' => 'user',
             'credentialTypeProperty' => 'type',
-            'credentialType' => 1,
-            'credentialCallable' => 'Zetta\ZendAuthentication\Entity\CredentialInterface::check',
+            'credentialType' => Application\Entity\Credential::TYPE_PASSWORD,
+            'credentialCallable' => 'Application\Entity\Credential::check',
         ],
         'default' => [
             'signAllowed' => false,
-            'role' => 2,
+            'role' => Role::ID_MEMBER,
         ],
         'acl' => [
-            'defaultRole' => 'Guest',
+            'defaultRole' => Role::ID_GUEST,
             'roles' => [
-                'Guest' => null,
-                'Member' => ['Guest'],
-                'Admin' => ['Member'],
+                Role::ID_GUEST => null,
+                Role::ID_MEMBER => [Role::ID_GUEST],
+                Role::ID_MANAGER => [Role::ID_MEMBER],
+                Role::ID_ADMIN => [Role::ID_MANAGER],
+                Role::ID_SUPER => [Role::ID_ADMIN],
             ],
             'resources' => [
                 'allow' => [
+                    'Application\Controller\Index' => [
+                        '' => [Role::ID_MEMBER],
+                    ],
+                    'Application\Controller\Users' => [
+                        '' => [Role::ID_ADMIN],
+                    ],
                     'Zetta\ZendAuthentication\Controller\Account' => [
-                        '' => ['Member'],
+                        '' => [Role::ID_MEMBER],
                     ],
                     'Zetta\ZendAuthentication\Controller\Auth' => [
-                        'authenticate' => ['Guest'],
-                        'confirm-email' => ['Guest'],
-                        'password-recover' => ['Guest'],
-                        'recover' => ['Guest'],
-                        'signin' => ['Guest'],
-                        'signout' => ['Guest'],
-                        'signup' => ['Guest'],
+                        'authenticate' => [Role::ID_GUEST],
+                        'confirm-email' => [Role::ID_GUEST],
+                        'password-recover' => [Role::ID_GUEST],
+                        'recover' => [Role::ID_GUEST],
+                        'signin' => [Role::ID_GUEST],
+                        'signout' => [Role::ID_GUEST],
+                        'signup' => [Role::ID_GUEST],
                     ],
                     'Zetta\ZendAuthentication\Menu' => [
-                        'account' => ['Member'],
-                    ],
+                        'account' => [Role::ID_MEMBER],
+                    ]
                 ],
                 'deny' => [
                     'Zetta\ZendAuthentication\Controller\Auth' => [
-                        'signup' => ['Member'],
+                        'signup' => [Role::ID_MEMBER],
                     ],
                 ],
             ],

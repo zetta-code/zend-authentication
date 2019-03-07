@@ -33,8 +33,7 @@ class SigninForm extends Form
             ],
             'options' => [
                 'label' => _('Email'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 
@@ -47,8 +46,7 @@ class SigninForm extends Form
             ],
             'options' => [
                 'label' => _('Password'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
             ],
         ]);
 

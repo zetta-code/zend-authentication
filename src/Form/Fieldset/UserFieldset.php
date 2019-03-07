@@ -58,8 +58,7 @@ class UserFieldset extends Fieldset
             ],
             'options' => [
                 'label' => _('Role'),
-                'label_attributes' => ['class' => 'control-label'],
-                'div' => ['class' => 'form-group', 'class_error' => 'has-error'],
+                'div' => ['class' => 'form-group'],
                 'object_manager' => $entityManager,
                 'target_class' => $roleClass,
                 'property' => 'name',
@@ -69,7 +68,7 @@ class UserFieldset extends Fieldset
                     'name' => 'findBy',
                     'params' => [
                         'criteria' => [
-                            'active' => true
+                            'deletedAt' => null
                         ],
                         'orderBy' => ['name' => 'ASC'],
                     ],

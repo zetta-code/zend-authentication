@@ -1,48 +1,57 @@
 <?php echo $this->partial('partial/title', ['title' => $this->translate('Profile')]); ?>
+<?php if ($user->getAvatar() !== null) {
+    $avatar = $user->getAvatar();
+} else {
+    if ($user->getGender() === \Zetta\ZendAuthentication\Entity\Enum\Gender::FEMALE) {
+        $avatar = $this->thumbnail()->getGirlThumbnailPath();
+    } else {
+        $avatar = $this->thumbnail()->getDefaultThumbnailPath();
+    }
+    $avatar = str_replace('./public/', '', $avatar);
+}
+?>
 
-<div class="row">
-    <div class="col-lg-6">
-        <div class="user-display">
-            <div class="user-display-bg"></div>
-            <div class="user-display-bottom">
-                <div class="user-display-avatar">
-                    <img src="<?php echo $this->basePath($user->getAvatar()); ?>"
-                         alt="<?php echo $user->getUsername() ? '@' . $user->getUsername() : $this->translate('Avatar'); ?>">
-                </div>
-                <div class="user-display-info">
-                    <div class="name"><?php echo $user->getName() ?: $user->getUsername(); ?></div>
-                    <?php if ($user->getUsername() !== null): ?>
-                        <div class="nick"><span class="fa fa-user"></span> <?php echo $user->getUsername(); ?></div>
-                    <?php endif; ?>
-                </div>
-                <div class="row user-display-details">
-                    <div class="col-12">
-                        <div class="title">Email</div>
-                        <div class="counter"><?php echo $user->getEmail(); ?></div>
-                    </div>
-                    <?php if ($user->getBio() !== null): ?>
-                        <div class="col-12">
-                            <div class="title">Bio</div>
-                            <div class="counter"><?php echo $user->getBio(true); ?></div>
+<div class="card mb-4">
+    <div class="card-body">
+        <h2><?php echo $user->getName(); ?></h2>
+
+        <?php
+        $userFieldset = $form->get('user');
+        echo $this->form()->openTag($form);
+        ?>
+            <?php echo $this->formHidden($userFieldset->get('id')); ?>
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="avatar" class="sr-only"><?php echo $this->translate('Avatar'); ?></label>
+                        <div class="text-center">
+                            <div class="mx-auto" style="max-width: 202px; --aspect-ratio:1;">
+                                <img id='avatar-preview' class="avatar img-thumbnail rounded-circle"
+                                     src="<?php echo $this->basePath($avatar); ?>"
+                                     alt="<?php echo $this->translate('Avatar'); ?>">
+                            </div>
+                            <h6 class="my-2"><?php echo $this->translate('Upload a different photo...'); ?></h6>
+                            <input id="avatar-upload" type="file"
+                                   name="<?php echo $userFieldset->get('avatar')->getName(); ?>" style="display: none">
+                            <label id="avatar-label" class="btn btn-secondary"
+                                   for="avatar-upload"><?php echo $this->translate('Choose the file'); ?></label>
                         </div>
-                    <?php endif; ?>
+                        <?php echo $this->formElementErrors($userFieldset->get('avatar')); ?>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="col-sm-9">
+                    <h5 class="card-title">
+                        <i class="fa fa-user"></i>
+                        <?php echo $this->translate('Update information'); ?>
+                    </h5>
+                    <hr>
 
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header card-header-divider">
-                <i class="fa fa-user"></i>
-                <?php echo $this->translate('Update information'); ?>
-            </div>
-            <div class="card-body">
-                <?php
-                $userFieldset = $form->get('user');
-                echo $this->form()->openTag($form);
-                echo $this->formHidden($userFieldset->get('id'));
-                ?>
+                    <?php
+                    $userFieldset = $form->get('user');
+                    echo $this->form()->openTag($form);
+                    echo $this->formHidden($userFieldset->get('id'));
+                    ?>
                     <?php echo $this->zettaFormRow($userFieldset->get('name')); ?>
 
                     <?php echo $this->zettaFormRow($userFieldset->get('username')); ?>
@@ -51,21 +60,12 @@
 
                     <div class="form-group">
                         <label class="control-label" for="password"><?php echo $this->translate('Password'); ?></label>
-                        <input type="password" name="password" class="form-control" placeholder="<?php echo $this->translate('Password'); ?>" disabled value="password">
-                        <a href="<?php echo $this->url($routes['password-change']['name'], $routes['password-change']['params'], $routes['password-change']['options'], $routes['password-change']['reuseMatchedParams']); ?>" class="help-block">
+                        <input type="password" name="password" class="form-control"
+                               placeholder="<?php echo $this->translate('Password'); ?>" disabled value="password">
+                        <a href="<?php echo $this->url($routes['password-change']['name'], $routes['password-change']['params'], $routes['password-change']['options'], $routes['password-change']['reuseMatchedParams']); ?>"
+                           class="help-block">
                             <?php echo $this->translate('Change password?'); ?>
                         </a>
-                    </div>
-
-                    <div class="form-group">
-                        <label><?php echo $this->translate('Avatar'); ?></label>
-
-                        <div>
-                            <img class="mb-3" id='avatar-preview' width="128" height="128" src="<?php echo $this->basePath($user->getAvatar()); ?>" alt="<?php echo $this->translate('Avatar'); ?>">
-                            <input id="avatar-upload" type="file" name="<?php echo $userFieldset->get('avatar')->getName(); ?>" style="display: none">
-                            <label id="avatar-label" class="btn btn-outline-secondary" for="avatar-upload"><?php echo $this->translate('Choose the file'); ?></label>
-                        </div>
-                        <?php echo $this->formElementErrors($userFieldset->get('avatar')); ?>
                     </div>
 
                     <?php echo $this->zettaFormRow($userFieldset->get('gender')); ?>
@@ -74,16 +74,14 @@
 
                     <?php echo $this->zettaFormRow($userFieldset->get('bio')); ?>
 
-                    <div class="form-group">
-                        <?php echo $this->formRow($form->get('submit-btn')); ?>
-                    </div>
-                <?php echo $this->form()->closeTag(); ?>
+                    <?php echo $this->formRow($form->get('submit-btn')); ?>
+                </div>
             </div>
-            </div>
-        </div>
+        <?php echo $this->form()->closeTag(); ?>
     </div>
-<?php
-$this->inlineScript()->captureStart();
+</div>
+
+<?php $this->inlineScript()->captureStart();
 echo <<<JS
 uploadImg('avatar');
 JS;
