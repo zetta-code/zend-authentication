@@ -25,10 +25,10 @@
   "prefer-stable": true,
   "require": {
     "php": "^7.2",
-    "zendframework/zend-captcha": "^2.8",
+    "zendframework/zend-captcha": "^2.9",
     "zendframework/zend-mvc-plugins": "^1.0",
     "zendframework/zend-stdlib": "^3.2",
-    "zendframework/zend-session": "^2.8",
+    "zendframework/zend-session": "^2.9",
     "zendframework/zend-permissions-acl": "^2.7",
     "zendframework/zendservice-recaptcha": "^3.2",
     "zetta-code/zend-bootstrap": "^0.1",
