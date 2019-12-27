@@ -4,7 +4,9 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendAuthentication\View\Helper\Service;
+declare(strict_types=1);
+
+namespace Zetta\ZendAuthentication\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\Authentication\AuthenticationService;
@@ -21,7 +23,6 @@ class IsAllowedFactory implements FactoryInterface
     {
         $auth = $container->get(AuthenticationService::class);
         $acl = $container->get(Acl::class);
-
         $role = $auth->hasIdentity() ? new GenericRole($auth->getIdentity()->role()) : $acl->getDefaultRole();
 
         return new $requestedName($acl, $role);

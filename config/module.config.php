@@ -25,7 +25,7 @@ return [
             'isAllowed' => Controller\Plugin\IsAllowed::class,
         ],
         'factories' => [
-            Controller\Plugin\IsAllowed::class => Controller\Plugin\Service\IsAllowedFactory::class,
+            Controller\Plugin\IsAllowed::class => Factory\IsAllowedFactory::class,
         ]
     ],
 
@@ -44,7 +44,7 @@ return [
             'isAllowed' => View\Helper\IsAllowed::class,
         ],
         'factories' => [
-            View\Helper\IsAllowed::class => View\Helper\Service\IsAllowedFactory::class,
+            View\Helper\IsAllowed::class => Factory\IsAllowedFactory::class,
         ]
     ],
 
