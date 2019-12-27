@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Authentication;
 
 use Interop\Container\ContainerInterface;
+use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Authentication\Adapter\Credential;
 use Zetta\ZendAuthentication\Authentication\Storage\Session;
@@ -26,6 +27,6 @@ class AuthenticationServiceFactory implements FactoryInterface
         $storage = $container->get(Session::class);
         $adapter = $container->get(Credential::class);
 
-        return new $requestedName($storage, $adapter);
+        return new AuthenticationService($storage, $adapter);
     }
 }
