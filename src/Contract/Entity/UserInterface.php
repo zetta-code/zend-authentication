@@ -4,8 +4,11 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendAuthentication\Entity;
-use Jenssegers\Date\Date;
+declare(strict_types=1);
+
+namespace Zetta\ZendAuthentication\Contract\Entity;
+
+use DateTimeInterface;
 use Zetta\ZendAuthentication\Entity\Enum\Gender;
 
 /**
@@ -96,13 +99,13 @@ interface UserInterface
 
     /**
      * Get the User birthday
-     * @return Date
+     * @return DateTimeInterface
      */
     public function getBirthday();
 
     /**
      * Set the User birthday
-     * @param Date $birthday
+     * @param DateTimeInterface $birthday
      * @return UserInterface
      */
     public function setBirthday($birthday);
@@ -162,7 +165,7 @@ interface UserInterface
 
     /**
      * Get the User tokenDate
-     * @return \DateTime
+     * @return DateTimeInterface
      */
     public function getTokenDate();
 
@@ -181,8 +184,8 @@ interface UserInterface
 
     /**
      * Get the User role name
-     * @param mixed $role
+     * @param RoleInterface|null $role
      * @return string
      */
-    public function role($role = null);
+    public function role(?RoleInterface $role = null): string;
 }
