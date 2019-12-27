@@ -4,6 +4,8 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendAuthentication\Authentication\Adapter;
 
 use DoctrineModule\Authentication\Adapter\ObjectRepository;

@@ -4,6 +4,8 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendAuthentication\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
