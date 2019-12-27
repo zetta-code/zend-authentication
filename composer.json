@@ -24,7 +24,8 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
+    "ext-gettext": "*",
     "zendframework/zend-captcha": "^2.9",
     "zendframework/zend-mvc-plugins": "^1.0",
     "zendframework/zend-stdlib": "^3.2",
