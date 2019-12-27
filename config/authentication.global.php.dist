@@ -1,8 +1,125 @@
 <?php
+/**
+ * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
+ */
+
+declare(strict_types=1);
 
 use Application\Entity\Role;
 
 return [
+    'router' => [
+        'routes' => [
+            'authentication' => [
+                'type' => Zend\Router\Http\Literal::class,
+                'options' => [
+                    'route' => '/auth',
+                    'defaults' => [
+                        'controller' => 'Zetta\ZendAuthentication\Controller\Auth',
+                        'action' => 'index'
+                    ]
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'authenticate' => [
+                        'type' => Zend\Router\Http\Literal::class,
+                        'options' => [
+                            'route' => '/authenticate',
+                            'defaults' => [
+                                'action' => 'authenticate'
+                            ]
+                        ],
+                        'priority' => 9,
+                    ],
+                    'confirm-email' => [
+                        'type' => Zend\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/confirm-email/:token',
+                            'constraints' => [
+                                'token' => '[a-zA-Z0-9]*'
+                            ],
+                            'defaults' => [
+                                'action' => 'confirm-email'
+                            ]
+                        ],
+                        'priority' => 9
+                    ],
+                    'default' => [
+                        'type' => Zend\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/:controller[/[:action[/[:id]]]]',
+                            'constraints' => [
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[0-9]+'
+                            ],
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Zetta\ZendAuthentication\Controller',
+                                'action' => 'index'
+                            ]
+                        ],
+                        'priority' => 5
+                    ],
+                    'password-recover' => [
+                        'type' => Zend\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/password-recover/:token',
+                            'constraints' => [
+                                'token' => '[a-zA-Z0-9]*'
+                            ],
+                            'defaults' => [
+                                'action' => 'password-recover'
+                            ]
+                        ],
+                        'priority' => 9
+                    ],
+                    'recover' => [
+                        'type' => Zend\Router\Http\Literal::class,
+                        'options' => [
+                            'route' => '/recover',
+                            'defaults' => [
+                                'action' => 'recover'
+                            ]
+                        ],
+                        'priority' => 9
+                    ],
+                    'signin' => [
+                        'type' => Zend\Router\Http\Literal::class,
+                        'options' => [
+                            'route' => '/signin',
+                            'defaults' => [
+                                'action' => 'signin'
+                            ]
+                        ],
+                        'priority' => 9
+                    ],
+                    'signout' => [
+                        'type' => Zend\Router\Http\Literal::class,
+                        'options' => [
+                            'route' => '/signout',
+                            'defaults' => [
+                                'action' => 'signout'
+                            ],
+                        ],
+                        'priority' => 9
+                    ],
+                    'signup' => [
+                        'type' => Zend\Router\Http\Literal::class,
+                        'options' => [
+                            'route' => '/signup',
+                            'defaults' => [
+                                'action' => 'signup'
+                            ],
+                        ],
+                        'priority' => 9
+                    ],
+                ],
+                'priority' => 10
+            ]
+        ]
+    ],
+
     'zend_authentication' => [
         'layout' => 'zetta/zend-authentication/layout/default',
         'templates' => [
