@@ -10,6 +10,9 @@ namespace Zetta\ZendAuthentication;
 
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
+/**
+ * Class ConfigProvider.
+ */
 class ConfigProvider implements ConfigProviderInterface
 {
     /**

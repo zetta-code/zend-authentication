@@ -12,6 +12,10 @@ use Zend\Form\Element;
 use Zend\Form\Form;
 use Zetta\ZendAuthentication\InputFilter\SigninFilter;
 
+/**
+ * Class SigninForm.
+ * @method SigninFilter getInputFilter()
+ */
 class SigninForm extends Form
 {
     /**

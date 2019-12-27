@@ -10,6 +10,7 @@ namespace Zetta\ZendAuthentication\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
@@ -80,7 +81,7 @@ class AccountController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @return Response|ViewModel
      */
     public function indexAction()
     {
@@ -126,7 +127,7 @@ class AccountController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @return Response|ViewModel
      */
     public function passwordChangeAction()
     {

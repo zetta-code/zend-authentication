@@ -12,8 +12,14 @@ use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\StringLength;
 
+/**
+ * Class SigninFilter.
+ */
 class SigninFilter extends InputFilter
 {
+    /**
+     * SigninFilter constructor.
+     */
     public function __construct()
     {
         $this->add([

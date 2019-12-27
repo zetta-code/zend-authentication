@@ -14,6 +14,9 @@ use Zend\Permissions\Acl\Role\GenericRole;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Permissions\Acl\Acl;
 
+/**
+ * Class IsAllowedFactory.
+ */
 class IsAllowedFactory implements FactoryInterface
 {
     /**

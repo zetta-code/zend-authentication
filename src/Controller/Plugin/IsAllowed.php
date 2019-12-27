@@ -8,11 +8,15 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Controller\Plugin;
 
+use RuntimeException;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zetta\ZendAuthentication\Permissions\Acl\Acl;
 
+/**
+ * Class IsAllowed.
+ */
 class IsAllowed extends AbstractPlugin
 {
     /**
@@ -55,7 +59,7 @@ class IsAllowed extends AbstractPlugin
      * @param string $privilege
      * @param string|RoleInterface $role
      * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function isAllowed($resource, $privilege = null, $role = null)
     {

@@ -14,6 +14,9 @@ use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator;
 
+/**
+ * Class UserFilter.
+ */
 class UserFilter extends InputFilter
 {
     /**

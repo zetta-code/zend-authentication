@@ -8,14 +8,17 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Permissions\Acl;
 
+use Exception;
 use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Resource\GenericResource;
 use Zend\Permissions\Acl\Role\GenericRole;
 
+/**
+ * Class Acl.
+ */
 class Acl extends ZendAcl
 {
     /**
-     *
      * @var string
      */
     protected $defaultRole = 'Guest';
@@ -23,18 +26,18 @@ class Acl extends ZendAcl
     /**
      * Acl constructor.
      * @param array $config
-     * @throws \Exception
+     * @throws Exception
      */
-    public function __construct($config)
+    public function __construct($config = [])
     {
         if (!isset($config['roles']) || !isset($config['resources'])) {
-            throw new \Exception('Invalid ACL Config found');
+            throw new Exception('Invalid ACL Config found');
         }
 
         $roles = $config['roles'];
         $resources = $config['resources'];
         if (isset($config['defaultRole'])) {
-            $this->defaultRole = (string) $config['defaultRole'];
+            $this->defaultRole = (string)$config['defaultRole'];
         }
 
         if (!isset($roles[$this->defaultRole])) {
@@ -70,7 +73,7 @@ class Acl extends ZendAcl
      *
      * @param $resources
      * @return Acl
-     * @throws \Exception
+     * @throws Exception
      */
     protected function addResources($resources)
     {
@@ -98,7 +101,7 @@ class Acl extends ZendAcl
                             $this->deny($role, $controller, $action);
                         }
                     } else {
-                        throw new \Exception('No valid permission defined: ' . $permission);
+                        throw new Exception('No valid permission defined: ' . $permission);
                     }
                 }
 

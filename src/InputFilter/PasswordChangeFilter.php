@@ -12,13 +12,15 @@ use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\StringLength;
 
+/**
+ * Class PasswordChangeFilter.
+ */
 class PasswordChangeFilter extends InputFilter
 {
     /**
      * PasswordChangeFilter constructor.
-     * @param array $options
      */
-    public function __construct($options = [])
+    public function __construct()
     {
         $this->add([
             'name' => 'password-old',

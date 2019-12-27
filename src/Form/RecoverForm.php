@@ -13,6 +13,10 @@ use Zend\Form\Form;
 use Zend\Hydrator\ClassMethods;
 use Zetta\ZendAuthentication\InputFilter\RecoverFilter;
 
+/**
+ * Class RecoverForm.
+ * @method RecoverFilter getInputFilter()
+ */
 class RecoverForm extends Form
 {
     /**

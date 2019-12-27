@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Exception;
 
+use BadMethodCallException;
+
 /**
  * Exception to be thrown in case of unauthorized access to a resource
  */
-class UnauthorizedException extends \BadMethodCallException
+class UnauthorizedException extends BadMethodCallException
 {
 }

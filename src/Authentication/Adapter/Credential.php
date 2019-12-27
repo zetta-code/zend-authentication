@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Authentication\Adapter;
 
 use DoctrineModule\Authentication\Adapter\ObjectRepository;
+use DoctrineModule\Options\Authentication;
 use Zend\Authentication\Adapter\Exception;
 use Zend\Authentication\Result as AuthenticationResult;
 use Zetta\ZendAuthentication\Options\Authentication as AuthenticationOptions;
@@ -34,7 +35,7 @@ class Credential extends ObjectRepository
     }
 
     /**
-     * @param array|\DoctrineModule\Options\Authentication $options
+     * @param array|Authentication $options
      * @return $this
      */
     public function setOptions($options)
@@ -100,9 +101,9 @@ class Credential extends ObjectRepository
      * This method attempts to validate that the record in the resultset is indeed a
      * record that matched the identity provided to this adapter.
      *
-     * @param  object $identity
-     * @throws Exception\UnexpectedValueException
+     * @param object $identity
      * @return AuthenticationResult
+     * @throws Exception\UnexpectedValueException
      */
     protected function validateIdentity($identity)
     {
@@ -208,9 +209,9 @@ class Credential extends ObjectRepository
      * This method attempts to validate that the record in the resultset is indeed a
      * record that matched the identity provided to this adapter.
      *
-     * @throws Exception\UnexpectedValueException
      * @param object $credential
      * @return AuthenticationResult
+     * @throws Exception\UnexpectedValueException
      */
     protected function validateCredential($credential)
     {

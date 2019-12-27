@@ -11,6 +11,9 @@ namespace Zetta\ZendAuthentication\Permissions\Acl;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
+/**
+ * Class AclFactory.
+ */
 class AclFactory implements FactoryInterface
 {
     /**

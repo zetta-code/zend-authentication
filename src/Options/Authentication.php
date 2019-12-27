@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Options;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use DoctrineModule\Options\Authentication as AuthenticationOptions;
 use Zend\Authentication\Adapter\Exception;
 
@@ -79,7 +79,7 @@ class Authentication extends AuthenticationOptions
     }
 
     /**
-     * @param  ObjectRepository $credentialRepository
+     * @param ObjectRepository $credentialRepository
      * @return Authentication
      */
     public function setCredentialRepository(ObjectRepository $credentialRepository)
@@ -115,9 +115,9 @@ class Authentication extends AuthenticationOptions
     }
 
     /**
-     * @param  string $emailProperty
-     * @throws Exception\InvalidArgumentException
+     * @param string $emailProperty
      * @return Authentication
+     * @throws Exception\InvalidArgumentException
      */
     public function setEmailProperty($emailProperty)
     {
@@ -165,9 +165,9 @@ class Authentication extends AuthenticationOptions
     }
 
     /**
-     * @param  string $credentialType
-     * @throws Exception\InvalidArgumentException
+     * @param string $credentialType
      * @return Authentication
+     * @throws Exception\InvalidArgumentException
      */
     public function setCredentialType($credentialType)
     {
@@ -191,9 +191,9 @@ class Authentication extends AuthenticationOptions
     }
 
     /**
-     * @param  string $credentialTypeProperty
-     * @throws Exception\InvalidArgumentException
+     * @param string $credentialTypeProperty
      * @return Authentication
+     * @throws Exception\InvalidArgumentException
      */
     public function setCredentialTypeProperty($credentialTypeProperty)
     {

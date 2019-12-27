@@ -8,10 +8,18 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\TransactionRequiredException;
+use Exception;
 use Zend\Authentication\AuthenticationService;
+use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Uri\Uri;
 use Zend\View\Model\ViewModel;
@@ -50,7 +58,6 @@ class AuthController extends AbstractActionController
      * @var AbstractPluginManager
      */
     protected $formManager;
-
 
     /**
      * @var array
@@ -120,8 +127,8 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Exception
+     * @return Response|ViewModel
+     * @throws Exception
      */
     public function signinAction()
     {
@@ -150,8 +157,8 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response
-     * @throws \Exception
+     * @return Response
+     * @throws Exception
      */
     public function authenticateAction()
     {
@@ -200,7 +207,7 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response
+     * @return Response
      */
     public function signoutAction()
     {
@@ -214,10 +221,10 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @return Response|ViewModel
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
      */
     public function signupAction()
     {
@@ -296,10 +303,10 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return Response
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function confirmEmailAction()
     {
@@ -342,9 +349,9 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return Response|ViewModel
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function recoverAction()
     {
@@ -404,10 +411,10 @@ class AuthController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return Response|ViewModel
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function passwordRecoverAction()
     {
@@ -425,7 +432,7 @@ class AuthController extends AbstractActionController
         /** @var UserInterface $identity */
         $identity = $qb->getQuery()->getOneOrNullResult();
 
-        $now = new \DateTime();
+        $now = new DateTime();
         if ($identity === null || $identity->getTokenDate() === null
             || $now->getTimestamp() - $identity->getTokenDate()->getTimestamp() > 86400) {
             if ($identity !== null) {
@@ -479,19 +486,19 @@ class AuthController extends AbstractActionController
      * @param string $redirectUrl
      * @param array $options
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     protected function verifyRedirect($redirectUrl, $options)
     {
         if (strlen($redirectUrl) > 2048) {
-            throw new \Exception('Too long redirectUrl argument passed');
+            throw new Exception('Too long redirectUrl argument passed');
         }
         if ($redirectUrl !== '') {
             // The below check is to prevent possible redirect attack
             // (if someone tries to redirect user to another domain).
             $uri = new Uri($redirectUrl);
             if (!$uri->isValid() || $uri->getHost() !== null) {
-                throw new \Exception('Incorrect redirect URL: ' . $redirectUrl);
+                throw new Exception('Incorrect redirect URL: ' . $redirectUrl);
             }
             $options = ArrayUtils::merge($options, ['query' => ['redirect' => $redirectUrl]]);
         }

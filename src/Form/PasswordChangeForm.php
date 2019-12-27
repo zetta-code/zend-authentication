@@ -12,6 +12,10 @@ use Zend\Form\Element;
 use Zend\Form\Form;
 use Zetta\ZendAuthentication\InputFilter\PasswordChangeFilter;
 
+/**
+ * Class PasswordChangeForm.
+ * @method PasswordChangeFilter getInputFilter()
+ */
 class PasswordChangeForm extends Form
 {
     /**

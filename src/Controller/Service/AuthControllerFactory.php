@@ -14,6 +14,9 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\I18n\Translator;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
+/**
+ * Class AuthControllerFactory.
+ */
 class AuthControllerFactory implements FactoryInterface
 {
     /**

@@ -8,9 +8,13 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\View;
 
+use ArrayAccess;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
+/**
+ * Class UnauthorizedStrategyFactory.
+ */
 class UnauthorizedStrategyFactory implements FactoryInterface
 {
     /**
@@ -22,7 +26,7 @@ class UnauthorizedStrategyFactory implements FactoryInterface
 
         if (isset($config['view_manager'])
             && (is_array($config['view_manager'])
-                || $config['view_manager'] instanceof \ArrayAccess
+                || $config['view_manager'] instanceof ArrayAccess
             )
         ) {
             $config = $config['view_manager'];

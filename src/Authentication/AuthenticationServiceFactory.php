@@ -13,6 +13,9 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Authentication\Adapter\Credential;
 use Zetta\ZendAuthentication\Authentication\Storage\Session;
 
+/**
+ * Class AuthenticationServiceFactory.
+ */
 class AuthenticationServiceFactory implements FactoryInterface
 {
     /**

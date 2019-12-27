@@ -12,7 +12,7 @@ use DateTimeInterface;
 use Zetta\ZendAuthentication\Entity\Enum\Gender;
 
 /**
- * Interface UserInterface
+ * Interface UserInterface.
  */
 interface UserInterface
 {

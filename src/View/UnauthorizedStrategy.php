@@ -15,6 +15,9 @@ use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
 use Zend\View\Model\ViewModel;
 
+/**
+ * Class UnauthorizedStrategy.
+ */
 class UnauthorizedStrategy extends AbstractListenerAggregate
 {
     const NOT_ALLOW = 'not-allow';
@@ -36,7 +39,7 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
      */
     public function __construct($template)
     {
-        $this->template = (string) $template;
+        $this->template = (string)$template;
     }
 
     /**
@@ -50,12 +53,12 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
     /**
      * Flag: display exceptions in error pages?
      *
-     * @param  bool $displayExceptions
+     * @param bool $displayExceptions
      * @return UnauthorizedStrategy
      */
     public function setDisplayExceptions($displayExceptions)
     {
-        $this->displayExceptions = (bool) $displayExceptions;
+        $this->displayExceptions = (bool)$displayExceptions;
         return $this;
     }
 
@@ -92,13 +95,13 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
     /**
      * Create an exception view model, and set the HTTP status code
      *
+     * @param MvcEvent $e
+     * @return void
      * @todo   dispatch.error does not halt dispatch unless a response is
      *         returned. As such, we likely need to trigger rendering as a low
      *         priority dispatch.error event (or goto a render event) to ensure
      *         rendering occurs, and that munging of view models occurs when
      *         expected.
-     * @param  MvcEvent $e
-     * @return void
      */
     public function prepareExceptionViewModel(MvcEvent $e)
     {
@@ -118,12 +121,12 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
             case self::NOT_ALLOW:
                 $exception = $e->getParam('exception');
                 $model = new ViewModel([
-                    'code'               => $exception->getCode(),
-                    'message'            => $e->getParam('message'),
-                    'role'               => $e->getParam('role'),
-                    'controller'         => $e->getParam('controller'),
-                    'action'             => $e->getParam('action'),
-                    'exception'          => $exception,
+                    'code' => $exception->getCode(),
+                    'message' => $e->getParam('message'),
+                    'role' => $e->getParam('role'),
+                    'controller' => $e->getParam('controller'),
+                    'action' => $e->getParam('action'),
+                    'exception' => $exception,
                     'display_exceptions' => $this->displayExceptions(),
                 ]);
                 $model->setTemplate($this->getTemplate());
@@ -131,7 +134,7 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
                 $e->getViewModel()->addChild($model);
 
                 $response = $e->getResponse();
-                if (! $response) {
+                if (!$response) {
                     $response = new HttpResponse();
                     $response->setStatusCode(403);
                     $e->setResponse($response);

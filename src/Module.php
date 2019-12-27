@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication;
 
+use Exception;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response;
 use Zend\Mvc\ApplicationInterface;
@@ -26,6 +27,9 @@ use Zetta\ZendAuthentication\Exception\ResourceNotFoundException;
 use Zetta\ZendAuthentication\Exception\UnauthorizedException;
 use Zetta\ZendAuthentication\View\UnauthorizedStrategy;
 
+/**
+ * Class Module.
+ */
 class Module
 {
     /**
@@ -49,7 +53,7 @@ class Module
     protected $helperManager;
 
     /**
-     * @param  \Zend\Mvc\MvcEvent $e The MvcEvent instance
+     * @param MvcEvent $e The MvcEvent instance
      * @return void
      */
     public function onBootstrap($e)
@@ -79,7 +83,7 @@ class Module
     /**
      * @param MvcEvent $e
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function checkAuthentication(MvcEvent $e)
     {

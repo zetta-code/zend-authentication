@@ -14,8 +14,11 @@ use Zend\Form\Element;
 use Zend\Form\Fieldset;
 use Zetta\DoctrineUtil\Hydrator\DoctrineObject;
 use Zetta\ZendAuthentication\Entity\Enum\Gender;
-use Zetta\ZendBootstrap\Hydrator\Strategy\DateStrategy;
+use Zetta\ZendBootstrap\Hydrator\Strategy\DateTimeStrategy;
 
+/**
+ * Class UserFieldset.
+ */
 class UserFieldset extends Fieldset
 {
     /**
@@ -40,7 +43,7 @@ class UserFieldset extends Fieldset
         }
 
         $hidrator = new DoctrineObject($entityManager);
-        $hidrator->addStrategy('birthday', new DateStrategy());
+        $hidrator->addStrategy('birthday', new DateTimeStrategy());
         $this->setHydrator($hidrator);
         $this->setObject(new $identityClass());
 

@@ -13,6 +13,9 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Options\Authentication;
 
+/**
+ * Class SessionFactory.
+ */
 class SessionFactory implements FactoryInterface
 {
     /**
@@ -51,7 +54,7 @@ class SessionFactory implements FactoryInterface
     /**
      * Gets options from configuration.
      *
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
      * @return Authentication
      */
     public function getOptions(ContainerInterface $container)

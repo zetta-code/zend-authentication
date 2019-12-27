@@ -12,13 +12,15 @@ use Zend\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\EmailAddress;
 
+/**
+ * Class RecoverFilter.
+ */
 class RecoverFilter extends InputFilter
 {
     /**
      * RecoverPasswordFilter constructor.
-     * @param array $options
      */
-    public function __construct($options = [])
+    public function __construct()
     {
         $this->add([
             'name' => 'email',

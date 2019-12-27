@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Authentication\Storage;
 
+use DoctrineModule\Options\Authentication;
 use Zend\Session\ManagerInterface as SessionManager;
 use Zetta\ZendAuthentication\Options\Authentication as AuthenticationOptions;
 
@@ -25,10 +26,10 @@ class Session extends \Zend\Authentication\Storage\Session
     /**
      * Sets session storage options and initializes session namespace object
      *
-     * @param  mixed $namespace
-     * @param  mixed $member
-     * @param  SessionManager $manager
-     * @param array | \DoctrineModule\Options\Authentication $options
+     * @param mixed $namespace
+     * @param mixed $member
+     * @param SessionManager $manager
+     * @param array | Authentication $options
      */
     public function __construct($namespace = null, $member = null, SessionManager $manager = null, $options = [])
     {
@@ -37,7 +38,7 @@ class Session extends \Zend\Authentication\Storage\Session
     }
 
     /**
-     * @param  array | AuthenticationOptions $options
+     * @param array | AuthenticationOptions $options
      * @return Session
      */
     public function setOptions($options)
@@ -78,7 +79,7 @@ class Session extends \Zend\Authentication\Storage\Session
     }
 
     /**
-     * @param  object $identity
+     * @param object $identity
      * @return void
      */
     public function write($identity)

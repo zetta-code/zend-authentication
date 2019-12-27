@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Contract\Entity;
 
 /**
- * Interface RoleInterface
+ * Interface RoleInterface.
  */
 interface RoleInterface
 {

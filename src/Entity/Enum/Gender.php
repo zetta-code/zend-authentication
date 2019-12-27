@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Entity\Enum;
 
+/**
+ * Class Gender.
+ */
 class Gender
 {
     const FEMALE = 1;

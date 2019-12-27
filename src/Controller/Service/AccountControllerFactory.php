@@ -12,6 +12,9 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
+/**
+ * Class AccountControllerFactory.
+ */
 class AccountControllerFactory implements FactoryInterface
 {
     /**

@@ -6,11 +6,15 @@
 
 namespace Zetta\ZendAuthentication\View\Helper;
 
+use RuntimeException;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zetta\ZendAuthentication\Permissions\Acl\Acl;
 
+/**
+ * Class IsAllowed.
+ */
 class IsAllowed extends AbstractHelper
 {
     /**
@@ -76,7 +80,7 @@ class IsAllowed extends AbstractHelper
      * @param string $privilege
      * @param string|RoleInterface $role
      * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function isAllowed($resource, $privilege = null, $role = null)
     {
