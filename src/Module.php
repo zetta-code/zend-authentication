@@ -12,16 +12,15 @@ use Exception;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response;
 use Zend\Mvc\ApplicationInterface;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\PluginManager as ControllerPluginManager;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\SessionManager;
 use Zend\Stdlib\ArrayObject;
 use Zend\Stdlib\ArrayUtils;
-use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 use Zetta\ZendAuthentication\Exception\ResourceNotFoundException;
 use Zetta\ZendAuthentication\Exception\UnauthorizedException;
@@ -59,14 +58,15 @@ class Module
     public function onBootstrap($e)
     {
         $this->application = $e->getApplication();
-        $eventeManager = $this->application->getEventManager();
+        $eventManager = $this->application->getEventManager();
+        $sharedEventManager = $eventManager->getSharedManager();
         $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventeManager);
+        $moduleRouteListener->attach($eventManager);
 
         $this->getServiceManager()->get(SessionManager::class);
 
-        $eventeManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuthentication']);
-        $this->getServiceManager()->get(UnauthorizedStrategy::class)->attach($eventeManager);
+        $sharedEventManager->attach(AbstractActionController::class, MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 100);
+        $this->getServiceManager()->get(UnauthorizedStrategy::class)->attach($eventManager);
     }
 
     /**
@@ -81,35 +81,40 @@ class Module
     }
 
     /**
-     * @param MvcEvent $e
-     * @return void
+     * @param MvcEvent $event
      * @throws Exception
      */
-    public function checkAuthentication(MvcEvent $e)
+    public function onDispatch(MvcEvent $event)
+    {
+        return $this->checkAuthentication($event);
+    }
+
+    /**
+     * @param MvcEvent $event
+     * @throws Exception
+     */
+    public function checkAuthentication(MvcEvent $event)
     {
         // Do nothing if no route match
-        $matches = $e->getRouteMatch();
-        if (!$matches instanceof RouteMatch) {
+        $routeMatch = $event->getRouteMatch();
+        if (!$routeMatch instanceof RouteMatch) {
             return;
         }
 
         // Do nothing if the result is a response object
-        $result = $e->getResult();
+        $result = $event->getResult();
         if ($result instanceof Response) {
             return;
         }
 
         // Not handling
-        if ($e->getError()) {
+        if ($event->getError()) {
             return;
         }
 
-        $controller = $matches->getParam('controller');
-        $action = $matches->getParam('action');
-        if (!$this->serviceManager->get('ControllerManager')->has($controller)) {
-            return;
-        }
-
+        $targetController = $event->getTarget();
+        $controller = $routeMatch->getParam('controller');
+        $action = $routeMatch->getParam('action');
         $config = $this->getServiceManager()->get('config');
         $auth = $this->getServiceManager()->get(AuthenticationService::class);
         $acl = $this->getServiceManager()->get(Permissions\Acl\Acl::class);
@@ -125,77 +130,68 @@ class Module
         $navigation->setAcl($acl)->setRole($role);
 
         if (!$acl->hasResource($controller)) {
-            $e->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-            $e->setError(UnauthorizedStrategy::NOT_ALLOW);
-            $e->setController($controller);
-            $e->setControllerClass($controller);
-            $e->setParam('message', 'Resource not found.');
-            $e->setParam('exception', new ResourceNotFoundException(sprintf('ACL Resource %s not found', $controller), Response::STATUS_CODE_501));
-            $e->setParam('controller', $controller);
-            $return = $this->application->getEventManager()->triggerEvent($e)->last();
+            $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+            $event->setError(UnauthorizedStrategy::NOT_ALLOW);
+            $event->setController($controller);
+            $event->setControllerClass($controller);
+            $event->setParam('message', 'Resource not found.');
+            $event->setParam('exception', new ResourceNotFoundException(sprintf('ACL Resource %s not found', $controller), Response::STATUS_CODE_501));
+            $event->setParam('controller', $controller);
+            $return = $this->application->getEventManager()->triggerEvent($event)->last();
             if (!$return) {
-                $return = $e->getResult();
+                $return = $event->getResult();
             }
             if (!is_object($return)) {
                 if (ArrayUtils::hasStringKeys($return)) {
                     $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
                 }
             }
-            $e->setResult($return);
-
+            $event->setResult($return);
+            $event->stopPropagation(true);
             return;
         }
 
         if ($identity === null) {
             // Authentication
             if (!$acl->isAllowed($role, $controller, $action)) {
-                /** @var FlashMessenger $flashMessenger */
-                $flashMessenger = $this->getPluginManager()->get(FlashMessenger::class);
-                $flashMessenger->addErrorMessage(_('Please, sign in.'));
-                /** @var Url $urlHelper */
-                $urlHelper = $this->getHelperManager()->get(Url::class);
+                $targetController->flashMessenger()->addErrorMessage(_('Please, sign in.'));
 
-                $uri = $e->getRequest()->getRequestUri();
-                $redirectUri = $urlHelper($config['zend_authentication']['routes']['redirect']['name'], $config['zend_authentication']['routes']['redirect']['params'], $config['zend_authentication']['routes']['redirect']['options'], $config['zend_authentication']['routes']['redirect']['reuseMatchedParams']);
+                $uri = $event->getApplication()->getRequest()->getUri();
+                $uri->setScheme(null)
+                    ->setHost(null)
+                    ->setPort(null)
+                    ->setUserInfo(null);
+                $redirectUri = $targetController->url()->fromRoute($config['zend_authentication']['routes']['redirect']['name'], $config['zend_authentication']['routes']['redirect']['params'], $config['zend_authentication']['routes']['redirect']['options'], $config['zend_authentication']['routes']['redirect']['reuseMatchedParams']);
                 $options = [];
-                if ($uri !== '' && $uri !== $redirectUri) {
-                    $options['query'] = ['redirect' => $e->getRequest()->getRequestUri()];
+                if ($uri->toString() !== '' && $uri !== $redirectUri) {
+                    $options['query'] = ['redirect' => $uri->toString()];
                 }
                 $options = ArrayUtils::merge($config['zend_authentication']['routes']['signin']['options'], $options);
-                $url = $urlHelper($config['zend_authentication']['routes']['signin']['name'], $config['zend_authentication']['routes']['signin']['params'], $options, $config['zend_authentication']['routes']['signin']['reuseMatchedParams']);
-                /** @var \Zend\Http\PhpEnvironment\Response $response */
-                $response = $e->getResponse();
-                $response->getHeaders()->addHeaderLine('Location', $url);
-                $response->setStatusCode(302);
-
-                $e->stopPropagation();
-
-                return;
+                return $targetController->redirect()->toRoute($config['zend_authentication']['routes']['signin']['name'], $config['zend_authentication']['routes']['signin']['params'], $options, $config['zend_authentication']['routes']['signin']['reuseMatchedParams']);
             }
         } else {
             // Authorization
             if (!$acl->isAllowed($role, $controller, $action)) {
-                $e->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-                $e->setError(UnauthorizedStrategy::NOT_ALLOW);
-                $e->setController($controller);
-                $e->setControllerClass($controller);
-                $e->setParam('message', 'You are not authorized.');
-                $e->setParam('exception', new UnauthorizedException(sprintf('You are not authorized to access %s:%s', $controller, $action), Response::STATUS_CODE_403));
-                $e->setParam('identity', $identity);
-                $e->setParam('controller', $controller);
-                $e->setParam('action', $action);
-                $return = $this->application->getEventManager()->triggerEvent($e)->last();
+                $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+                $event->setError(UnauthorizedStrategy::NOT_ALLOW);
+                $event->setController($controller);
+                $event->setControllerClass($controller);
+                $event->setParam('message', 'You are not authorized.');
+                $event->setParam('exception', new UnauthorizedException(sprintf('You are not authorized to access %s:%s', $controller, $action), Response::STATUS_CODE_403));
+                $event->setParam('identity', $identity);
+                $event->setParam('controller', $controller);
+                $event->setParam('action', $action);
+                $return = $this->application->getEventManager()->triggerEvent($event)->last();
                 if (!$return) {
-                    $return = $e->getResult();
+                    $return = $event->getResult();
                 }
                 if (!is_object($return)) {
                     if (ArrayUtils::hasStringKeys($return)) {
                         $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
                     }
                 }
-                $e->setResult($return);
-
-                return;
+                $event->setResult($return);
+                $event->stopPropagation(true);
             } else {
                 $navigation->setRole($role);
             }
