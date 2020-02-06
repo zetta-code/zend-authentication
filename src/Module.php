@@ -156,15 +156,16 @@ class Module
             if (!$acl->isAllowed($role, $controller, $action)) {
                 $targetController->flashMessenger()->addErrorMessage(_('Please, sign in.'));
 
-                $uri = $event->getApplication()->getRequest()->getUri();
-                $uri->setScheme(null)
+                $uri = $event->getApplication()->getRequest()->getUri()
+                    ->setScheme(null)
                     ->setHost(null)
                     ->setPort(null)
-                    ->setUserInfo(null);
+                    ->setUserInfo(null)
+                    ->toString();
                 $redirectUri = $targetController->url()->fromRoute($config['zend_authentication']['routes']['redirect']['name'], $config['zend_authentication']['routes']['redirect']['params'], $config['zend_authentication']['routes']['redirect']['options'], $config['zend_authentication']['routes']['redirect']['reuseMatchedParams']);
                 $options = [];
-                if ($uri->toString() !== '' && $uri !== $redirectUri) {
-                    $options['query'] = ['redirect' => $uri->toString()];
+                if ($uri !== '' && $uri !== $redirectUri) {
+                    $options['query'] = ['redirect' => $uri];
                 }
                 $options = ArrayUtils::merge($config['zend_authentication']['routes']['signin']['options'], $options);
                 return $targetController->redirect()->toRoute($config['zend_authentication']['routes']['signin']['name'], $config['zend_authentication']['routes']['signin']['params'], $options, $config['zend_authentication']['routes']['signin']['reuseMatchedParams']);
