@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -9,13 +10,13 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Authentication\Storage;
 
 use DoctrineModule\Options\Authentication;
-use Zend\Session\ManagerInterface as SessionManager;
+use Laminas\Session\ManagerInterface as SessionManager;
 use Zetta\ZendAuthentication\Options\Authentication as AuthenticationOptions;
 
 /**
  * Authentication storage that uses a Doctrine object for verification.
  */
-class Session extends \Zend\Authentication\Storage\Session
+class Session extends \Laminas\Authentication\Storage\Session
 {
     /**
      *
@@ -43,7 +44,7 @@ class Session extends \Zend\Authentication\Storage\Session
      */
     public function setOptions($options)
     {
-        if (!$options instanceof AuthenticationOptions) {
+        if (! $options instanceof AuthenticationOptions) {
             $options = new AuthenticationOptions($options);
         }
 
@@ -60,7 +61,6 @@ class Session extends \Zend\Authentication\Storage\Session
     public function read()
     {
         if (($identity = parent::read())) {
-
             return $this->options->getObjectRepository()->find($identity);
         }
 

@@ -1,19 +1,19 @@
-<?php echo $this->doctype(); ?>
+<?= $this->doctype() ?>
 <html lang="en-US">
     <head>
-        <?php echo $this->partial('layout/default/_head'); ?>
+        <?= $this->partial('layout/default/_head') ?>
     </head>
     <body class="splash-screen">
         <!-- Start Content-->
         <div class="wrapper login">
             <div class="content">
                 <div class="main-content container-fluid">
-                    <?php echo $this->content; ?>
+                    <?= $this->content ?>
                 </div>
             </div>
         </div>
         <!-- End Content-->
 
-        <?php echo $this->partial('layout/default/_scripts'); ?>
+        <?= $this->partial('layout/default/_scripts') ?>
     </body>
 </html>

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -9,8 +10,8 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Authentication;
 
 use Interop\Container\ContainerInterface;
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Authentication\Adapter\Credential;
 use Zetta\ZendAuthentication\Authentication\Storage\Session;
 

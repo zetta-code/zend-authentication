@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -9,9 +10,9 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\Authentication\AuthenticationService;
-use Zend\Permissions\Acl\Role\GenericRole;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Permissions\Acl\Role\GenericRole;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Zetta\ZendAuthentication\Permissions\Acl\Acl;
 
 /**

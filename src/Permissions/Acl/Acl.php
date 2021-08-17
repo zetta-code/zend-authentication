@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -9,14 +10,14 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Permissions\Acl;
 
 use Exception;
-use Zend\Permissions\Acl\Acl as ZendAcl;
-use Zend\Permissions\Acl\Resource\GenericResource;
-use Zend\Permissions\Acl\Role\GenericRole;
+use Laminas\Permissions\Acl\Acl as LaminasAcl;
+use Laminas\Permissions\Acl\Resource\GenericResource;
+use Laminas\Permissions\Acl\Role\GenericRole;
 
 /**
  * Class Acl.
  */
-class Acl extends ZendAcl
+class Acl extends LaminasAcl
 {
     /**
      * @var string
@@ -30,7 +31,7 @@ class Acl extends ZendAcl
      */
     public function __construct($config = [])
     {
-        if (!isset($config['roles']) || !isset($config['resources'])) {
+        if (! isset($config['roles']) || ! isset($config['resources'])) {
             throw new Exception('Invalid ACL Config found');
         }
 
@@ -40,7 +41,7 @@ class Acl extends ZendAcl
             $this->defaultRole = (string)$config['defaultRole'];
         }
 
-        if (!isset($roles[$this->defaultRole])) {
+        if (! isset($roles[$this->defaultRole])) {
             $roles[$this->defaultRole] = '';
         }
 
@@ -57,8 +58,8 @@ class Acl extends ZendAcl
     protected function addRoles($roles)
     {
         foreach ($roles as $name => $parent) {
-            if (!$this->hasRole($name)) {
-                if (empty($parent) && !is_array($parent)) {
+            if (! $this->hasRole($name)) {
+                if (empty($parent) && ! is_array($parent)) {
                     $parent = [];
                 }
                 $this->addRole(new GenericRole($name), $parent);
@@ -82,7 +83,7 @@ class Acl extends ZendAcl
                 if ($controller == '') {
                     $controller = null;
                 } else {
-                    if (!$this->hasResource($controller)) {
+                    if (! $this->hasResource($controller)) {
                         $this->addResource(new GenericResource($controller));
                     }
                 }
@@ -104,7 +105,6 @@ class Acl extends ZendAcl
                         throw new Exception('No valid permission defined: ' . $permission);
                     }
                 }
-
             }
         }
 

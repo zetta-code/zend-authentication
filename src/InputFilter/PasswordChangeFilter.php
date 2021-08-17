@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -8,9 +9,9 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\InputFilter;
 
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\StringLength;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\StringLength;
 
 /**
  * Class PasswordChangeFilter.

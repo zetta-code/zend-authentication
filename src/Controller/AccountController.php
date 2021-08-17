@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -9,11 +10,11 @@ declare(strict_types=1);
 namespace Zetta\ZendAuthentication\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Stdlib\ArrayUtils;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\View\Model\ViewModel;
 use Zetta\ZendAuthentication\Contract\Entity\UserInterface;
 use Zetta\ZendAuthentication\Entity\Enum\Gender;
 use Zetta\ZendAuthentication\Form\PasswordChangeForm;
@@ -97,7 +98,8 @@ class AccountController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $post = ArrayUtils::merge(
-                $request->getPost()->toArray(), $request->getFiles()->toArray()
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
             );
             $form->setData($post);
 

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -15,14 +16,14 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\TransactionRequiredException;
 use Exception;
-use Zend\Authentication\AuthenticationService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Uri\Uri;
-use Zend\View\Model\ViewModel;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Uri\Uri;
+use Laminas\View\Model\ViewModel;
 use Zetta\ZendAuthentication\Authentication\Adapter\Credential;
 use Zetta\ZendAuthentication\Authentication\Storage\Session;
 use Zetta\ZendAuthentication\Contract\Entity\CredentialInterface;
@@ -211,7 +212,7 @@ class AuthController extends AbstractActionController
      */
     public function signoutAction()
     {
-        if (!$this->identity()) {
+        if (! $this->identity()) {
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
         }
 
@@ -332,7 +333,7 @@ class AuthController extends AbstractActionController
             return $this->redirect()->toRoute($this->routes['signin']['name'], $this->routes['signin']['params'], $this->routes['signin']['options'], $this->routes['signin']['reuseMatchedParams']);
         }
 
-        if (!$identity->isConfirmedEmail()) {
+        if (! $identity->isConfirmedEmail()) {
             $identity->unsetToken(); // unset immediately taken to prevent multiple requests to db
             $identity->setSignAllowed(true);
             $identity->setConfirmedEmail(true);
@@ -433,8 +434,10 @@ class AuthController extends AbstractActionController
         $identity = $qb->getQuery()->getOneOrNullResult();
 
         $now = new DateTime();
-        if ($identity === null || $identity->getTokenDate() === null
-            || $now->getTimestamp() - $identity->getTokenDate()->getTimestamp() > 86400) {
+        if (
+            $identity === null || $identity->getTokenDate() === null
+            || $now->getTimestamp() - $identity->getTokenDate()->getTimestamp() > 86400
+        ) {
             if ($identity !== null) {
                 $identity->unsetToken();
                 $this->entityManager->flush();
@@ -497,7 +500,7 @@ class AuthController extends AbstractActionController
             // The below check is to prevent possible redirect attack
             // (if someone tries to redirect user to another domain).
             $uri = new Uri($redirectUrl);
-            if (!$uri->isValid() || $uri->getHost() !== null) {
+            if (! $uri->isValid() || $uri->getHost() !== null) {
                 throw new Exception('Incorrect redirect URL: ' . $redirectUrl);
             }
             $options = ArrayUtils::merge($options, ['query' => ['redirect' => $redirectUrl]]);

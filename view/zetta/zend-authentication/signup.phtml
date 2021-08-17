@@ -6,53 +6,63 @@ $this->headTitle($title);
 <div class="splash-container sign-up">
     <div class="card card-border-color card-border-color-primary">
         <div class="card-header">
-            <a href="<?php echo $this->url($routes['home']['name'], $routes['home']['params'], $routes['home']['options'], $routes['home']['reuseMatchedParams']); ?>">
-                <img src="<?php echo $this->basePath('img/brand.svg') ?>" height="48" class="logo-img" alt="<?php $this->translate('ZF Skeleton App'); ?>">
+            <a href="<?= $this->url(
+                $this->routes['home']['name'],
+                $this->routes['home']['params'],
+                $this->routes['home']['options'],
+                $this->routes['home']['reuseMatchedParams']
+            ) ?>">
+                <img src="<?= $this->basePath('img/brand.svg') ?>" height="48" class="logo-img" alt="<?php $this->translate('Laminas Skeleton App') ?>">
             </a>
-            <span class="splash-description"><?php echo $this->translate('Please enter your user information.'); ?></span>
+            <span class="splash-description"><?= $this->translate('Please enter your user information.') ?></span>
         </div>
         <div class="card-body">
-            <?php echo $this->zettaFlashMessenger(); ?>
+            <?= $this->zettaFlashMessenger() ?>
 
             <?php
-            echo $this->form()->openTag($form);
-            $userFieldset = $form->get('signup');
+            echo $this->form()->openTag($this->form);
+            $userFieldset = $this->form->get('signup');
             ?>
-                <span class="splash-title pb-4"><?php echo $title ?></span>
+                <span class="splash-title pb-4"><?= $title ?></span>
 
-                <?php echo $this->formHidden($userFieldset->get('id')); ?>
+                <?= $this->formHidden($userFieldset->get('id')) ?>
 
-                <?php echo $this->zettaFormRow($userFieldset->get('name')); ?>
+                <?= $this->zettaFormRow($userFieldset->get('name')) ?>
 
-                <?php echo $this->zettaFormRow($userFieldset->get('email')); ?>
+                <?= $this->zettaFormRow($userFieldset->get('email')) ?>
 
                 <div class="form-group toogle-password">
-                    <?php echo $this->formLabel($userFieldset->get('password')); ?>
+                    <?= $this->formLabel($userFieldset->get('password')) ?>
                     <?php
                     if (count($userFieldset->get('password')->getMessages()) !== 0) {
                         $userFieldset->get('password')->setAttribute('class', $userFieldset->get('password')->getAttribute('class') . ' is-invalid');
                     }
                     echo $this->formElement($userFieldset->get('password')); ?>
                     <i class="fa btn-toogle-password" onclick="togglePassword('#signup-password'); return false;"></i>
-                    <?php echo $this->formElementErrors($userFieldset->get('password'), ['class' => 'invalid-feedback']); ?>
+                    <?= $this->formElementErrors($userFieldset->get('password'), ['class' => 'invalid-feedback']) ?>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $this->formRow($form->get('submit-btn')); ?>
+                    <?= $this->formRow($this->form->get('submit-btn')) ?>
                 </div>
 
                 <p class="text-secondary">
                     Ao criar uma conta, você concorda com nossos <a href="/legal" target="_blank">Termos de Serviço</a>
                     e <a href="/privacy" target="_blank">Política de Privacidade</a>.
                 </p>
-            <?php echo $this->form()->closeTag(); ?>
+            <?= $this->form()->closeTag() ?>
         </div>
     </div>
     <div class="splash-footer">
         <span>
-            <?php echo $this->translate('Already have an account?'); ?>
-            <a href="<?php echo $this->url($routes['signin']['name'], $routes['signin']['params'], $routes['signin']['options'], $routes['signin']['reuseMatchedParams']); ?>">
-                <?php echo $this->translate('Please login'); ?>
+            <?= $this->translate('Already have an account?') ?>
+            <a href="<?= $this->url(
+                $this->routes['signin']['name'],
+                $this->routes['signin']['params'],
+                $this->routes['signin']['options'],
+                $this->routes['signin']['reuseMatchedParams']
+            ) ?>">
+                <?= $this->translate('Please login') ?>
             </a>
         </span>
     </div>

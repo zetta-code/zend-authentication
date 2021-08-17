@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
@@ -6,10 +7,10 @@
 
 namespace Zetta\ZendAuthentication\View\Helper;
 
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
+use Laminas\View\Helper\AbstractHelper;
 use RuntimeException;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\View\Helper\AbstractHelper;
 use Zetta\ZendAuthentication\Permissions\Acl\Acl;
 
 /**

@@ -1,4 +1,4 @@
-# Zetta/ZendAuthentication plugin for ZendFramework 3
+# Zetta/LaminasAuthentication plugin for ZendFramework 3
 
 ## Installation
 

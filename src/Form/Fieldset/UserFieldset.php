@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -8,11 +9,11 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Form\Fieldset;
 
+use Doctrine\Laminas\Hydrator\DoctrineObject;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineModule\Form\Element\ObjectSelect;
-use Zend\Form\Element;
-use Zend\Form\Fieldset;
-use Zetta\DoctrineUtil\Hydrator\DoctrineObject;
+use Laminas\Form\Element;
+use Laminas\Form\Fieldset;
 use Zetta\ZendAuthentication\Entity\Enum\Gender;
 use Zetta\ZendBootstrap\Hydrator\Strategy\DateTimeStrategy;
 

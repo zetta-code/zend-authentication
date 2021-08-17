@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -8,9 +9,9 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\Form;
 
-use Zend\Form\Element;
-use Zend\Form\Form;
-use Zend\Hydrator\ClassMethods;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
+use Laminas\Hydrator\ClassMethodsHydrator;
 use Zetta\ZendAuthentication\InputFilter\RecoverFilter;
 
 /**
@@ -29,7 +30,7 @@ class RecoverForm extends Form
         parent::__construct($name, $options);
         $this->setAttribute('method', 'post');
         $this->setAttribute('role', 'form');
-        $this->setHydrator(new ClassMethods(false));
+        $this->setHydrator(new ClassMethodsHydrator(false));
         $this->setInputFilter(new RecoverFilter());
 
         $this->add([

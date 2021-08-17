@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -8,19 +9,19 @@ declare(strict_types=1);
 
 namespace Zetta\ZendAuthentication\View;
 
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\ResponseInterface as Response;
-use Zend\View\Model\ViewModel;
+use Laminas\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Stdlib\ResponseInterface as Response;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class UnauthorizedStrategy.
  */
 class UnauthorizedStrategy extends AbstractListenerAggregate
 {
-    const NOT_ALLOW = 'not-allow';
+    public const NOT_ALLOW = 'not-allow';
 
     /**
      * Display exceptions?
@@ -134,7 +135,7 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
                 $e->getViewModel()->addChild($model);
 
                 $response = $e->getResponse();
-                if (!$response) {
+                if (! $response) {
                     $response = new HttpResponse();
                     $response->setStatusCode(403);
                     $e->setResponse($response);

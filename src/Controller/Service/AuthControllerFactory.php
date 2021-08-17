@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -10,9 +11,9 @@ namespace Zetta\ZendAuthentication\Controller\Service;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\Authentication\AuthenticationService;
-use Zend\Mvc\I18n\Translator;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Mvc\I18n\Translator;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class AuthControllerFactory.

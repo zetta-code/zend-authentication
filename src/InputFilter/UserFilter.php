@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -10,9 +11,9 @@ namespace Zetta\ZendAuthentication\InputFilter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineModule\Validator\UniqueObject;
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator;
 
 /**
  * Class UserFilter.

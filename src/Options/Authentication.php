@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -10,7 +11,7 @@ namespace Zetta\ZendAuthentication\Options;
 
 use Doctrine\Persistence\ObjectRepository;
 use DoctrineModule\Options\Authentication as AuthenticationOptions;
-use Zend\Authentication\Adapter\Exception;
+use Laminas\Authentication\Adapter\Exception;
 
 /**
  * Authentication options that uses a Doctrine object for verification.
@@ -121,7 +122,7 @@ class Authentication extends AuthenticationOptions
      */
     public function setEmailProperty($emailProperty)
     {
-        if (!is_string($emailProperty) || $emailProperty === '') {
+        if (! is_string($emailProperty) || $emailProperty === '') {
             throw new Exception\InvalidArgumentException(
                 sprintf('Provided $emailProperty is invalid, %s given', gettype($emailProperty))
             );
@@ -146,7 +147,7 @@ class Authentication extends AuthenticationOptions
      */
     public function setCredentialIdentityProperty($credentialIdentityProperty)
     {
-        if (!is_string($credentialIdentityProperty) || $credentialIdentityProperty === '') {
+        if (! is_string($credentialIdentityProperty) || $credentialIdentityProperty === '') {
             throw new Exception\InvalidArgumentException(
                 sprintf('Provided $credentialIdentityProperty is invalid, %s given', gettype($credentialIdentityProperty))
             );
@@ -197,7 +198,7 @@ class Authentication extends AuthenticationOptions
      */
     public function setCredentialTypeProperty($credentialTypeProperty)
     {
-        if (!is_string($credentialTypeProperty) || $credentialTypeProperty === '') {
+        if (! is_string($credentialTypeProperty) || $credentialTypeProperty === '') {
             throw new Exception\InvalidArgumentException(
                 sprintf('Provided $credentialTypeProperty is invalid, %s given', gettype($credentialTypeProperty))
             );

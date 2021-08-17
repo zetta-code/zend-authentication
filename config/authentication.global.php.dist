@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -12,7 +13,7 @@ return [
     'router' => [
         'routes' => [
             'authentication' => [
-                'type' => Zend\Router\Http\Literal::class,
+                'type' => Laminas\Router\Http\Literal::class,
                 'options' => [
                     'route' => '/auth',
                     'defaults' => [
@@ -23,7 +24,7 @@ return [
                 'may_terminate' => true,
                 'child_routes' => [
                     'authenticate' => [
-                        'type' => Zend\Router\Http\Literal::class,
+                        'type' => Laminas\Router\Http\Literal::class,
                         'options' => [
                             'route' => '/authenticate',
                             'defaults' => [
@@ -33,7 +34,7 @@ return [
                         'priority' => 9,
                     ],
                     'confirm-email' => [
-                        'type' => Zend\Router\Http\Segment::class,
+                        'type' => Laminas\Router\Http\Segment::class,
                         'options' => [
                             'route' => '/confirm-email/:token',
                             'constraints' => [
@@ -46,7 +47,7 @@ return [
                         'priority' => 9
                     ],
                     'default' => [
-                        'type' => Zend\Router\Http\Segment::class,
+                        'type' => Laminas\Router\Http\Segment::class,
                         'options' => [
                             'route' => '/:controller[/[:action[/[:id]]]]',
                             'constraints' => [
@@ -62,7 +63,7 @@ return [
                         'priority' => 5
                     ],
                     'password-recover' => [
-                        'type' => Zend\Router\Http\Segment::class,
+                        'type' => Laminas\Router\Http\Segment::class,
                         'options' => [
                             'route' => '/password-recover/:token',
                             'constraints' => [
@@ -75,7 +76,7 @@ return [
                         'priority' => 9
                     ],
                     'recover' => [
-                        'type' => Zend\Router\Http\Literal::class,
+                        'type' => Laminas\Router\Http\Literal::class,
                         'options' => [
                             'route' => '/recover',
                             'defaults' => [
@@ -85,7 +86,7 @@ return [
                         'priority' => 9
                     ],
                     'signin' => [
-                        'type' => Zend\Router\Http\Literal::class,
+                        'type' => Laminas\Router\Http\Literal::class,
                         'options' => [
                             'route' => '/signin',
                             'defaults' => [
@@ -95,7 +96,7 @@ return [
                         'priority' => 9
                     ],
                     'signout' => [
-                        'type' => Zend\Router\Http\Literal::class,
+                        'type' => Laminas\Router\Http\Literal::class,
                         'options' => [
                             'route' => '/signout',
                             'defaults' => [
@@ -105,7 +106,7 @@ return [
                         'priority' => 9
                     ],
                     'signup' => [
-                        'type' => Zend\Router\Http\Literal::class,
+                        'type' => Laminas\Router\Http\Literal::class,
                         'options' => [
                             'route' => '/signup',
                             'defaults' => [

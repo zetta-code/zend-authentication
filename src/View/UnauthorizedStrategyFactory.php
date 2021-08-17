@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-authentication for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-authentication for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
@@ -10,7 +11,7 @@ namespace Zetta\ZendAuthentication\View;
 
 use ArrayAccess;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class UnauthorizedStrategyFactory.
@@ -24,7 +25,8 @@ class UnauthorizedStrategyFactory implements FactoryInterface
     {
         $config = $container->has('config') ? $container->get('config') : [];
 
-        if (isset($config['view_manager'])
+        if (
+            isset($config['view_manager'])
             && (is_array($config['view_manager'])
                 || $config['view_manager'] instanceof ArrayAccess
             )
